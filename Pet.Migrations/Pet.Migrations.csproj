@@ -1,0 +1,69 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="SqlScripts\Tables\001.PosPayment.sql" />
+    <None Remove="SqlScripts\Tables\002.ExpenseCategory.sql" />
+    <None Remove="SqlScripts\Tables\003.ExpenseRecipient.sql" />
+    <None Remove="SqlScripts\Tables\004.PosTerminal.sql" />
+    <None Remove="SqlScripts\Tables\005.Expense.sql" />
+    <None Remove="SqlScripts\Tables\006.BankTransfer.sql" />
+    <None Remove="SqlScripts\Tables\007.Iban.sql" />
+    <None Remove="SqlScripts\Tables\008.DirectDebitPayment.sql" />
+    <None Remove="SqlScripts\Tables\009.DirectDebit.sql" />
+    <None Remove="SqlScripts\Tables\010.CashWithdrawal.sql" />
+    <None Remove="SqlScripts\Tables\011.SavingsAccount.sql" />
+    <None Remove="SqlScripts\Tables\012.SavingsTransaction.sql" />
+    <None Remove="SqlScripts\Views\002.vwExpense.sql" />
+    <None Remove="SqlScripts\Views\003.vwExpenseByCategory.sql" />
+    <None Remove="SqlScripts\Views\004.vwExpenseMonth.sql" />
+    <None Remove="SqlScripts\Views\005.vwExpenseByRecipient.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="SqlScripts\Tables\006.BankTransfer.sql" />
+    <EmbeddedResource Include="SqlScripts\Tables\007.Iban.sql" />
+    <EmbeddedResource Include="SqlScripts\Tables\008.DirectDebitPayment.sql" />
+    <EmbeddedResource Include="SqlScripts\Tables\001.PosPayment.sql" />
+    <EmbeddedResource Include="SqlScripts\Tables\003.ExpenseRecipient.sql" />
+    <EmbeddedResource Include="SqlScripts\Tables\002.ExpenseCategory.sql" />
+    <EmbeddedResource Include="SqlScripts\Tables\009.DirectDebit.sql" />
+    <EmbeddedResource Include="SqlScripts\Tables\005.Expense.sql" />
+    <EmbeddedResource Include="SqlScripts\Tables\004.PosTerminal.sql" />
+    <EmbeddedResource Include="SqlScripts\Tables\012.SavingsTransaction.sql" />
+    <EmbeddedResource Include="SqlScripts\Tables\011.SavingsAccount.sql" />
+    <EmbeddedResource Include="SqlScripts\Tables\010.CashWithdrawal.sql" />
+    <EmbeddedResource Include="SqlScripts\Views\002.vwExpense.sql" />
+    <EmbeddedResource Include="SqlScripts\Views\005.vwExpenseByRecipient.sql" />
+    <EmbeddedResource Include="SqlScripts\Views\004.vwExpenseMonth.sql" />
+    <EmbeddedResource Include="SqlScripts\Views\003.vwExpenseByCategory.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="_ExternalResources\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.2.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Subtext.Scripting">
+      <HintPath>_ExternalResources\Subtext.Scripting.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

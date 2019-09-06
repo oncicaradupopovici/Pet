@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Events\**" />
+    <EmbeddedResource Remove="Events\**" />
+    <None Remove="Events\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NBB.Application.DataContracts" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="4.1.0" />
+    <PackageReference Include="NBB.Core.DependencyInjection" Version="$(NBBPackagesVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Pet.BankingDomain\Pet.Banking.Domain.csproj" />
+    <ProjectReference Include="..\Pet.Connector.Abstractions\Pet.Connector.Abstractions.csproj" />
+    <ProjectReference Include="..\Pet.ExpenseTrackingDomain\Pet.ExpenseTracking.Domain.csproj" />
+    <ProjectReference Include="..\Pet.ReadModel\Pet.ReadModel.csproj" />
+  </ItemGroup>
+
+</Project>
