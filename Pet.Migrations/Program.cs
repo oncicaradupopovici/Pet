@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
 using Microsoft.Extensions.Configuration;
 
 namespace Pet.Migrations
@@ -11,6 +12,7 @@ namespace Pet.Migrations
             var configurationBuilder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddUserSecrets(Assembly.GetCallingAssembly())
                 .AddEnvironmentVariables();
 
             var configuration = configurationBuilder.Build();

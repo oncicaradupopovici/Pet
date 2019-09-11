@@ -1,19 +1,20 @@
-﻿create view vwExpense
-as
-select 
-	e.ExpenseId,
-	e.ExpenseType,
-	e.Value,
-	e.ExpenseDate,
-	e.ExpenseRecipientId,
-	e.ExpenseCategoryId,
-	e.ExpenseMonth,
-	r.Name as ExpenseRecipientName,
-	c.Name as ExpenseCategoryName,
-	e.ExpenseSourceId as ExpenseSourceId,
-	e.ExpenseRecipientDetailCode,
-	e.Details1,
-	e.Details2
-from Expense e
-	left join ExpenseRecipient r on e.ExpenseRecipientId = r.ExpenseRecipientId
-	left join ExpenseCategory c on e.ExpenseCategoryId = c.ExpenseCategoryId
+﻿IF NOT EXISTS(SELECT 1 FROM sys.tables WHERE name = 'Expense')
+begin
+	CREATE TABLE Expense(
+		[ExpenseId] [uniqueidentifier] NOT NULL,
+		[ExpenseType] [tinyint] NOT NULL,
+		[Value] [decimal](9, 2) NOT NULL,
+		[ExpenseDate] [datetime] NOT NULL,
+		[ExpenseRecipientId] [uniqueidentifier] NULL,
+		[ExpenseCategoryId] [int] NULL,
+		[ExpenseMonth] [int] NOT NULL,
+		[ExpenseSourceId] [uniqueidentifier] NULL,
+		[ExpenseRecipientDetailCode] [varchar](500) NULL,
+		[Details1] [varchar](500) NULL,
+		[Details2] [varchar](500) NULL,
+
+		CONSTRAINT [PK_Expense] PRIMARY KEY CLUSTERED (ExpenseId),
+		CONSTRAINT [FK_Expense_ExpenseCategoryId] FOREIGN KEY([ExpenseCategoryId]) REFERENCES [ExpenseCategory] ([ExpenseCategoryId]),
+		CONSTRAINT [FK_Expense_ExpenseRecipientId] FOREIGN KEY([ExpenseRecipientId]) REFERENCES [ExpenseRecipient] ([ExpenseRecipientId])
+	)
+end
