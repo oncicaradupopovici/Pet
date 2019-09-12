@@ -1,6 +1,5 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
-import { routerReducer, routerMiddleware } from 'react-router-redux';
 import * as Entities from './Entities';
 import * as ReportUploads from './ReportUploads';
 import * as Expense from './Expense';
@@ -10,7 +9,7 @@ import * as ExpenseMonth from './ExpenseMonth';
 import * as ExpenseRecipient from './ExpenseRecipient';
 import * as ExpenseCategory from './ExpenseCategory';
 
-export default function configureStore (history, initialState) {
+export default function configureStore (initialState) {
   const reducers = {
     entities: Entities.reducer,
     reportUploads: ReportUploads.reducer,
@@ -23,8 +22,7 @@ export default function configureStore (history, initialState) {
   };
 
   const middleware = [
-    thunk,
-    routerMiddleware(history)
+    thunk
   ];
 
   // In development, use the browser's Redux dev tools extension if installed
@@ -35,8 +33,7 @@ export default function configureStore (history, initialState) {
   }
 
   const rootReducer = combineReducers({
-    ...reducers,
-    routing: routerReducer
+    ...reducers
   });
 
   return createStore(
