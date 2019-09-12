@@ -26,7 +26,6 @@
   },
   "devDependencies": {
     "ajv": "^6.10.2",
-    "babel-eslint": "^10.0.3",
     "cross-env": "^5.2.1",
     "eslint": "^6.3.0",
     "eslint-config-react-app": "^5.0.1",
@@ -44,5 +43,17 @@
     "test": "cross-env CI=true react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint ./src/"
+  },
+  "browserslist": {
+    "production": [
+      ">0.5%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 edge version"
+    ]
   }
 }
