@@ -11,4 +11,5 @@ namespace Pet.ReadModel.Data.EntityTypeConfiguration
             builder.ToTable("vwExpense").HasKey(x => x.ExpenseId);
         }
     }
+
 }

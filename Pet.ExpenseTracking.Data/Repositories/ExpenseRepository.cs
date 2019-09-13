@@ -49,15 +49,6 @@ namespace Pet.ExpenseTracking.Data.Repositories
             return expenses;
         }
 
-        public async Task<List<Expense>> FindByOpenBankingMerchant(string merchant)
-        {
-            var expenses = await _dbContext.Set<Expense>()
-                .Where(x => x.ExpenseType == ExpenseType.OpenBankingPayment && x.ExpenseSourceId.HasValue && x.ExpenseRecipientDetailCode == merchant)
-                .ToListAsync();
-
-            return expenses;
-        }
-
         public async Task<List<Expense>> FindByIban(string iban)
         {
             var expenses = await _dbContext.Set<Expense>()

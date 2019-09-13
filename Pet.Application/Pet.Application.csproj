@@ -20,7 +20,6 @@
     <ProjectReference Include="..\Pet.BankingDomain\Pet.Banking.Domain.csproj" />
     <ProjectReference Include="..\Pet.Connector.Abstractions\Pet.Connector.Abstractions.csproj" />
     <ProjectReference Include="..\Pet.ExpenseTrackingDomain\Pet.ExpenseTracking.Domain.csproj" />
-    <ProjectReference Include="..\Pet.OpenBanking.Domain\Pet.OpenBanking.Domain.csproj" />
     <ProjectReference Include="..\Pet.ReadModel\Pet.ReadModel.csproj" />
   </ItemGroup>
 

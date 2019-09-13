@@ -17,7 +17,7 @@ namespace Pet.Connector.Ing.Tests
             {
 
                 //Act
-                var commands = connector.GetCommandsFromImportStream(stream).ToList();
+                var commands = connector.GetCommandsFromBankReport(stream).ToList();
                 //Assert
                 commands.Should().NotBeEmpty();
             }

@@ -9,7 +9,6 @@ namespace Pet.ExpenseTracking.Domain.ExpenseRecipientAggregate
     {
         Task AddAsync(ExpenseRecipient entity);
         Task<ExpenseRecipient> FindByPosTerminal(string posTerminalCode);
-        Task<ExpenseRecipient> FindByOpenBankingMerchant(string openBankingMerchant);
         Task<ExpenseRecipient> FindByIban(string iban);
         Task<ExpenseRecipient> FindByDirectDebit(string directDebitCode);
         Task<ExpenseRecipient> FindBestMatchForPosTerminalCode(string posTerminalCode);
