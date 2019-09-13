@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using MediatR;
 using NBB.Application.DataContracts;
 using NBB.Data.Abstractions.Linq;
+using Pet.ExpenseTracking.Domain.Services;
 using Pet.ReadModel.Projections;
 
 namespace Pet.Application.Queries.ExpenseTracking
@@ -35,28 +36,21 @@ namespace Pet.Application.Queries.ExpenseTracking
         public class QueryHandler : IRequestHandler<Query, List<Model>>
         {
             private readonly IQueryable<ExpenseMonth> _query;
+            private readonly ExpenseMonthService _expenseMonthService;
 
-            public QueryHandler(IQueryable<ExpenseMonth> query)
+            public QueryHandler(IQueryable<ExpenseMonth> query, ExpenseMonthService expenseMonthService)
             {
                 _query = query;
+                _expenseMonthService = expenseMonthService;
             }
-
 
             public async Task<List<Model>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var items = await _query.ToListAsync(cancellationToken);
-                var result = items.Select(x => new Model(x.ExpenseMonthId, x.TotalExpenses, x.TotalSavings, GetExpenseMonthName(x.ExpenseMonthId)))
+                var result = items.Select(x => new Model(x.ExpenseMonthId, x.TotalExpenses, x.TotalSavings, _expenseMonthService.GetExpenseMonthName(x.ExpenseMonthId)))
                     .OrderByDescending(x => x.ExpenseMonthId).ToList();
 
                 return result;
-            }
-
-            private string GetExpenseMonthName(int expenseMonthId)
-            {
-                var year = expenseMonthId / 100;
-                var month = expenseMonthId % 100;
-                var date = new DateTime(year, month, 1);
-                return date.ToString("MMMM yyyy");
             }
         }
     }
