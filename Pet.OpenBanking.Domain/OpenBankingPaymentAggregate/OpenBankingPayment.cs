@@ -12,7 +12,8 @@ namespace Pet.OpenBanking.Domain.OpenBankingPaymentAggregate
         public string Currency { get; private set; }
         public decimal ExchangeRate { get; private set; }
         public string Merchant { get; private set;}
-        public string Category { get; private set; }    
+        public string Category { get; private set; }
+        public string Location { get; private set; }
 
 
         //for ef
@@ -21,7 +22,7 @@ namespace Pet.OpenBanking.Domain.OpenBankingPaymentAggregate
 
         }
 
-        public OpenBankingPayment(Guid openBankingPaymentId, decimal value, DateTime paymentDate, string currency, decimal exchangeRate, string merchant, string category)
+        public OpenBankingPayment(Guid openBankingPaymentId, decimal value, DateTime paymentDate, string currency, decimal exchangeRate, string merchant, string category, string location)
         {
             OpenBankingPaymentId = openBankingPaymentId;
             Value = value;
@@ -30,8 +31,9 @@ namespace Pet.OpenBanking.Domain.OpenBankingPaymentAggregate
             ExchangeRate = exchangeRate;
             Merchant = merchant;
             Category = category;
+            Location = location;
 
-            AddEvent(new OpenBankingPaymentAdded(OpenBankingPaymentId, Value, PaymentDate, Currency, ExchangeRate, Merchant, Category));
+            AddEvent(new OpenBankingPaymentAdded(OpenBankingPaymentId, Value, PaymentDate, Currency, ExchangeRate, Merchant, Category, Location));
         }
 
         public override Guid GetIdentityValue() => OpenBankingPaymentId;

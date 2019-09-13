@@ -12,8 +12,9 @@ namespace Pet.OpenBanking.Domain.OpenBankingPaymentAggregate.DomainEvents
         public decimal ExchangeRate { get; }
         public string Merchant { get; }
         public string Category { get; }
+        public string Location { get; }
 
-        public OpenBankingPaymentAdded(Guid openBankingPaymentId, decimal value, DateTime paymentDate, string currency, decimal exchangeRate, string merchant, string category, DomainEventMetadata metadata = null) 
+        public OpenBankingPaymentAdded(Guid openBankingPaymentId, decimal value, DateTime paymentDate, string currency, decimal exchangeRate, string merchant, string category, string location, DomainEventMetadata metadata = null) 
             : base(metadata)
         {
             OpenBankingPaymentId = openBankingPaymentId;
@@ -23,6 +24,7 @@ namespace Pet.OpenBanking.Domain.OpenBankingPaymentAggregate.DomainEvents
             ExchangeRate = exchangeRate;
             Merchant = merchant;
             Category = category;
+            Location = location;
         }
     }
 }

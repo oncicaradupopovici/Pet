@@ -33,6 +33,17 @@ namespace Pet.ExpenseTracking.Data.Repositories
             return null;
         }
 
+        public async Task<ExpenseRecipient> FindByOpenBankingMerchant(string openBankingMerchantCode)
+        {
+            var openBankingMerchant = await _dbContext.Set<OpenBankingMerchant>().SingleOrDefaultAsync(x => x.Code == openBankingMerchantCode);
+            if (openBankingMerchant != null)
+            {
+                return await _dbContext.Set<ExpenseRecipient>().FindAsync(openBankingMerchant.ExpenseRecipientId);
+            }
+
+            return null;
+        }
+
         public Task<ExpenseRecipient> FindById(Guid expenseRecipientId)
         {
             return _dbContext.Set<ExpenseRecipient>().FindAsync(expenseRecipientId);

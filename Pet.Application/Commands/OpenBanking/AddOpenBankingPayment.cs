@@ -19,8 +19,9 @@ namespace Pet.Application.Commands.OpenBanking
             public decimal ExchangeRate { get; }
             public string Merchant { get; }
             public string Category { get; }
+            public string Location { get; }
 
-            public Command(Guid openBankingPaymentId, decimal value, DateTime paymentDate, string currency, decimal exchangeRate, string merchant, string category, CommandMetadata metadata = null) 
+            public Command(Guid openBankingPaymentId, decimal value, DateTime paymentDate, string currency, decimal exchangeRate, string merchant, string category, string location, CommandMetadata metadata = null) 
                 : base(metadata)
             {
                 OpenBankingPaymentId = openBankingPaymentId;
@@ -30,6 +31,7 @@ namespace Pet.Application.Commands.OpenBanking
                 ExchangeRate = exchangeRate;
                 Merchant = merchant;
                 Category = category;
+                Location = location;
             }
         }
 
@@ -44,7 +46,7 @@ namespace Pet.Application.Commands.OpenBanking
 
             public async Task Handle(Command request, CancellationToken cancellationToken)
             {
-                var openBankingPayment = new OpenBankingPayment(request.OpenBankingPaymentId, request.Value, request.PaymentDate, request.Currency, request.ExchangeRate, request.Merchant, request.Category);
+                var openBankingPayment = new OpenBankingPayment(request.OpenBankingPaymentId, request.Value, request.PaymentDate, request.Currency, request.ExchangeRate, request.Merchant, request.Category, request.Location);
                 await _repository.AddAsync(openBankingPayment);
                 await _repository.SaveChangesAsync();
             }
