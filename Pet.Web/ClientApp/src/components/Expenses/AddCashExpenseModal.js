@@ -73,6 +73,7 @@ class AddCashExpenseModal extends Component {
                             <Label>Details</Label>
                             <Input type="text" value={details1} onChange={this.handleDetails1Change}  />
                         </FormGroup>
+
                     </Form>
                 </ModalBody>
                 <ModalFooter>

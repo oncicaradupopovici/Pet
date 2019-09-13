@@ -18,13 +18,5 @@ namespace Pet.ExpenseTracking.Domain.Services
             var result = resultDate.Year * 100 + resultDate.Month;
             return result;
         }
-
-        public string GetExpenseMonthName(int expenseMonthId)
-        {
-            var year = expenseMonthId / 100;
-            var month = expenseMonthId % 100;
-            var date = new DateTime(year, month, 1);
-            return date.ToString("MMMM yyyy");
-        }
     }
 }

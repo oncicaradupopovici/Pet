@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Pet.Application.Commands.Imports;
 using Pet.ExpenseTracking.Domain;
 
 namespace Pet.Application
@@ -27,8 +26,6 @@ namespace Pet.Application
                 serviceType => typeof(IEventedAggregateRoot).IsAssignableFrom(serviceType.GetGenericArguments()[0]));
             services.DecorateOpenGenericWhen(typeof(IUow<>), typeof(MediatorUowDecorator<>),
                 serviceType => typeof(IEventedEntity).IsAssignableFrom(serviceType.GetGenericArguments()[0]));
-
-            services.AddTransient<ConnectorResolver>();
         }
 
         private static void AddScopedContravariant<TBase, TResolve>(this IServiceCollection serviceCollection, Assembly assembly = null)

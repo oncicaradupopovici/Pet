@@ -11,7 +11,6 @@ namespace Pet.Web.Controllers
         // other properties omitted
 
         public IFormFile File { get; set; }
-        public string Bank { get; set; } = "ing";
     }
 
     [Route("api/[controller]")]
@@ -24,18 +23,11 @@ namespace Pet.Web.Controllers
             _mediator = mediator;
         }
 
-        [HttpPut("bankreport")]
+        [HttpPut]
         public async Task<IActionResult> ImportFromBankReport([FromForm]ImportViewModel import)
         {
-            var cmd = new ImportFromBankReport.Command(import.File.OpenReadStream(), import.Bank);
+            var cmd = new ImportFromBankReport.Command(import.File.OpenReadStream());
             await _mediator.Send(cmd);
-            return Ok();
-        }
-
-        [HttpPost("finq")]
-        public async Task<IActionResult> ImportFromFinq([FromBody] ImportFromFinq.Command command)
-        {
-            await _mediator.Send(command);
             return Ok();
         }
     }

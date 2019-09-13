@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,31 +12,28 @@ namespace Pet.Application.Commands.Imports
         public class Command : NBB.Application.DataContracts.Command
         {
             public Stream ReportStream { get; set; }
-            public string Bank { get; set; }
 
-            public Command(Stream reportStream, string bank)
+            public Command(Stream reportStream)
                 : base(null)
             {
                 ReportStream = reportStream;
-                Bank = bank;
             }
         }
 
         public class Handler : IRequestHandler<Command>
         {
-            private readonly ConnectorResolver _connectorResolver;
+            private readonly IConnector _connector;
             private readonly IMediator _mediator;
 
-            public Handler(ConnectorResolver connectorResolver, IMediator mediator)
+            public Handler(IConnector connector, IMediator mediator)
             {
-                _connectorResolver = connectorResolver;
+                _connector = connector;
                 _mediator = mediator;
             }
 
             public async Task Handle(Command request, CancellationToken cancellationToken)
             {
-                var connector = _connectorResolver.GetConnectorFor(request.Bank);
-                foreach (var command in connector.GetCommandsFromImportStream(request.ReportStream))
+                foreach (var command in _connector.GetCommandsFromBankReport(request.ReportStream))
                 {
                     await _mediator.Send(command, cancellationToken);
                 }

@@ -27,10 +27,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Pet.Application\Pet.Application.csproj" />
     <ProjectReference Include="..\Pet.Banking.Data\Pet.Banking.Data.csproj" />
-    <ProjectReference Include="..\Pet.Connector.Finq\Pet.Connector.Finq.csproj" />
     <ProjectReference Include="..\Pet.Connector.Ing\Pet.Connector.Ing.csproj" />
     <ProjectReference Include="..\Pet.ExpenseTracking.Data\Pet.ExpenseTracking.Data.csproj" />
-    <ProjectReference Include="..\Pet.OpenBanking.Data\Pet.OpenBanking.Data.csproj" />
     <ProjectReference Include="..\Pet.ReadModel.Data\Pet.ReadModel.Data.csproj" />
     <ProjectReference Include="..\Pet.Tenant\Pet.Tenant.csproj" />
   </ItemGroup>

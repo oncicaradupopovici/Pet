@@ -11,7 +11,6 @@ namespace Pet.ExpenseTracking.Data.EntityTypeConfiguration
             builder.HasMany(x => x.PosTerminals).WithOne();
             builder.HasMany(x => x.Ibans).WithOne();
             builder.HasMany(x => x.DirectDebits).WithOne();
-            builder.HasMany(x => x.OpenBankingMerchants).WithOne();
             builder.Ignore(x => x.Version);
         }
     }
