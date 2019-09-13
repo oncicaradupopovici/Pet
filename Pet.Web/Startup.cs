@@ -11,6 +11,7 @@ using Pet.Application;
 using Pet.Banking.Data;
 using Pet.Connector.Ing;
 using Pet.ExpenseTracking.Data;
+using Pet.OpenBanking.Data;
 using Pet.ReadModel.Data;
 using Pet.Tenant;
 
@@ -42,6 +43,7 @@ namespace Pet.Web
 
             services.AddPetTenant();
             services.AddBankingDataAccess();
+            services.AddOpenBankingDataAccess();
             services.AddExpenseTrackingDataAccess();
             services.AddReadModelDataAccess();
             services.AddPetApplication();       

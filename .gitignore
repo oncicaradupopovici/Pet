@@ -47,3 +47,6 @@
 /Pet.Connector.Finq/obj
 /Pet.OpenBanking.Domain/bin/Debug/netstandard2.0
 /Pet.OpenBanking.Domain/obj
+/Pet.Connector.Finq/bin/Debug/netstandard2.0
+/Pet.OpenBanking.Data/bin/Debug/netstandard2.0
+/Pet.OpenBanking.Data/obj
