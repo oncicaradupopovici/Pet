@@ -1,5 +1,9 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { ResponsiveLine } from '@nivo/line';
+import { actionCreators, selectors } from '../../store/ExpenseByCategory';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { groupBy } from '../../utils/groupBy';
 // make sure parent container have a defined height when using
 // responsive component, otherwise height will be 0 and
 // no chart will be rendered.
@@ -10,7 +14,7 @@ const MyChart = ({ data /* see data tab */ }) => (
         data={data}
         margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
         xScale={{ type: 'point' }}
-        yScale={{ type: 'linear', stacked: true, min: 'auto', max: 'auto' }}
+        yScale={{ type: 'linear', stacked: false, min: 'auto', max: 'auto' }}
         axisTop={null}
         axisRight={null}
         axisBottom={{
@@ -18,7 +22,7 @@ const MyChart = ({ data /* see data tab */ }) => (
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
-            legend: 'transportation',
+            legend: 'Expense Month',
             legendOffset: 36,
             legendPosition: 'middle'
         }}
@@ -27,7 +31,7 @@ const MyChart = ({ data /* see data tab */ }) => (
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
-            legend: 'count',
+            legend: 'Amount',
             legendOffset: -40,
             legendPosition: 'middle'
         }}
@@ -36,7 +40,6 @@ const MyChart = ({ data /* see data tab */ }) => (
         pointColor={{ theme: 'background' }}
         pointBorderWidth={2}
         pointBorderColor={{ from: 'serieColor' }}
-        pointLabel="y"
         pointLabelYOffset={-12}
         useMesh={true}
         legends={[
@@ -68,7 +71,7 @@ const MyChart = ({ data /* see data tab */ }) => (
     />
 )
 
-const data = [
+const dataX = [
     {
         "id": "japan",
         "color": "hsl(249, 70%, 50%)",
@@ -341,12 +344,23 @@ const data = [
     }
 ];
 
-export default class ExpenseCategoryEvolutionChart extends Component {
-    render() {
-        return (
-            <div style={{ height: '500px' }}>
-                <MyChart data={data} />
-            </div>
-        )
-    }
+export const ExpenseCategoryEvolutionChart = ({ expenses, loadExpenseByCategoryInRangeList, fromExpenseMonthId, toExpenseMonthId }) => {
+    useEffect(() => { loadExpenseByCategoryInRangeList(fromExpenseMonthId, toExpenseMonthId) });
+    const keySelector = expense => expense.expenseCategory || { expenseCategoryId: 0, name: '' };
+    const keyComparer = (leftKey, rightKey) => leftKey.expenseCategoryId === rightKey.expenseCategoryId;
+    const expensesGroupBy = groupBy(expenses, keySelector, keyComparer);
+    const data = expensesGroupBy.map(e => ({ id: e.key.name, data: e.value.map(v => ({ x: v.expenseMonthName, y: v.value })) }));
+
+    return (
+        <div style={{ height: '500px' }}>
+            <MyChart data={data} />
+        </div>
+    );
 }
+
+export default connect(
+    (state, ownProps) => ({
+        expenses: selectors.expenseByCategoryInRangeList(state, ownProps.fromExpenseMonthId, ownProps.toExpenseMonthId)
+    }),
+    dispatch => bindActionCreators(actionCreators, dispatch)
+)(ExpenseCategoryEvolutionChart);
