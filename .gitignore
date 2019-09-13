@@ -44,3 +44,6 @@
 /Pet.ReadModel/obj
 /Pet.ReadModel.Data/bin/Debug/netstandard2.0
 /Pet.ReadModel.Data/obj
+/Pet.Connector.Finq/obj
+/Pet.OpenBanking.Domain/bin/Debug/netstandard2.0
+/Pet.OpenBanking.Domain/obj
