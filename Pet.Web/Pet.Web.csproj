@@ -27,6 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Pet.Application\Pet.Application.csproj" />
     <ProjectReference Include="..\Pet.Banking.Data\Pet.Banking.Data.csproj" />
+    <ProjectReference Include="..\Pet.Connector.Finq\Pet.Connector.Finq.csproj" />
     <ProjectReference Include="..\Pet.Connector.Ing\Pet.Connector.Ing.csproj" />
     <ProjectReference Include="..\Pet.ExpenseTracking.Data\Pet.ExpenseTracking.Data.csproj" />
     <ProjectReference Include="..\Pet.OpenBanking.Data\Pet.OpenBanking.Data.csproj" />

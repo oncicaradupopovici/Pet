@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using NBB.Application.DataContracts;
 using OfficeOpenXml;
 using Pet.Application.Commands.Banking;
@@ -16,7 +17,7 @@ namespace Pet.Connector.Ing
         private bool _headerIdentified = false;
 
         //const 
-        public IEnumerable<Command> GetCommandsFromBankReport(Stream stream)
+        public IEnumerable<Command> GetCommandsFromImportStream(Stream stream)
         {
             var pck = new ExcelPackage();
             pck.Load(stream);
@@ -81,6 +82,11 @@ namespace Pet.Connector.Ing
                 }
             }
 
+        }
+
+        public bool CanHandle(string code)
+        {
+            return code.ToLower() == "ing";
         }
 
         private bool IsHeaderRow(ExcelWorksheet worksheet, int rowNo)

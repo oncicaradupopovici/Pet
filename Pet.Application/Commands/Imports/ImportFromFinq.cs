@@ -1,25 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Pet.Connector.Abstractions;
 
 namespace Pet.Application.Commands.Imports
 {
-    public class ImportFromBankReport
+    public class ImportFromFinq
     {
         public class Command : NBB.Application.DataContracts.Command
         {
-            public Stream ReportStream { get; set; }
-            public string Bank { get; set; }
-
-            public Command(Stream reportStream, string bank)
+            public Command()
                 : base(null)
             {
-                ReportStream = reportStream;
-                Bank = bank;
             }
         }
 
@@ -36,8 +27,8 @@ namespace Pet.Application.Commands.Imports
 
             public async Task Handle(Command request, CancellationToken cancellationToken)
             {
-                var connector = _connectorResolver.GetConnectorFor(request.Bank);
-                foreach (var command in connector.GetCommandsFromImportStream(request.ReportStream))
+                var connector = _connectorResolver.GetConnectorFor("finq");
+                foreach (var command in connector.GetCommandsFromImportStream(null))
                 {
                     await _mediator.Send(command, cancellationToken);
                 }

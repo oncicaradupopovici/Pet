@@ -9,6 +9,7 @@ using NBB.Correlation.AspNet;
 using Newtonsoft.Json;
 using Pet.Application;
 using Pet.Banking.Data;
+using Pet.Connector.Finq;
 using Pet.Connector.Ing;
 using Pet.ExpenseTracking.Data;
 using Pet.OpenBanking.Data;
@@ -48,6 +49,7 @@ namespace Pet.Web
             services.AddReadModelDataAccess();
             services.AddPetApplication();       
             services.AddIngConnector();
+            services.AddFinqConnector();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
