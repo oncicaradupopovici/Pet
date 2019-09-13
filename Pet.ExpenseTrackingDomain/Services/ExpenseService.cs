@@ -7,6 +7,7 @@ using Pet.Banking.Domain.PosPaymentAggregate.DomainEvents;
 using Pet.ExpenseTracking.Domain.ExpenseAggregate;
 using Pet.ExpenseTracking.Domain.ExpenseRecipientAggregate;
 using Pet.ExpenseTracking.Domain.ExpenseRecipientAggregate.DomainEvents;
+using Pet.OpenBanking.Domain.OpenBankingPaymentAggregate.DomainEvents;
 
 namespace Pet.ExpenseTracking.Domain.Services
 {
@@ -28,6 +29,15 @@ namespace Pet.ExpenseTracking.Domain.Services
                 await _expenseRecipientRepository.FindByPosTerminal(notification.PosTerminalCode);
 
             var expense = _expenseFactory.CreateFrom(ExpenseType.PosPayment, notification.Value, notification.PaymentDate, expenseRecipient?.ExpenseRecipientId, expenseRecipient?.ExpenseCategoryId, notification.PosTerminalCode, notification.PosTerminalCode, null, notification.PosPaymentId);
+            return expense;
+        }
+
+        public async Task<Expense> CreateExpenseWhen(OpenBankingPaymentAdded notification)
+        {
+            var expenseRecipient =
+                await _expenseRecipientRepository.FindByOpenBankingMerchant(notification.Merchant);
+
+            var expense = _expenseFactory.CreateFrom(ExpenseType.OpenBankingPayment, notification.Value, notification.PaymentDate, expenseRecipient?.ExpenseRecipientId, expenseRecipient?.ExpenseCategoryId, notification.Merchant, notification.Merchant, notification.Location, notification.OpenBankingPaymentId);
             return expense;
         }
 
@@ -66,6 +76,26 @@ namespace Pet.ExpenseTracking.Domain.Services
             }
 
             var expenses = await _expenseRepository.FindByPosTerminal(notification.PosTerminal);
+            foreach(var expense in expenses)
+            {
+                expense.SetExpenseRecipient(expenseRecipient.ExpenseRecipientId);
+                expense.SetExpenseCategory(expenseRecipient.ExpenseCategoryId);
+            }
+
+            return expenses;
+        }
+
+        public async Task<List<Expense>> UpdateExpensesWhen(OpenBankingMerchantAdded notification)
+        {
+            var expenseRecipient =
+                await _expenseRecipientRepository.FindById(notification.ExpenseRecipientId);
+
+            if (expenseRecipient == null)
+            {
+                return new List<Expense>();
+            }
+
+            var expenses = await _expenseRepository.FindByOpenBankingMerchant(notification.Code);
             foreach(var expense in expenses)
             {
                 expense.SetExpenseRecipient(expenseRecipient.ExpenseRecipientId);
