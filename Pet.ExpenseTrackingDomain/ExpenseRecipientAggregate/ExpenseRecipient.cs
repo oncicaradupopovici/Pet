@@ -15,6 +15,7 @@ namespace Pet.ExpenseTracking.Domain.ExpenseRecipientAggregate
         public List<PosTerminal> PosTerminals { get; private set; }
         public List<Iban> Ibans { get; private set; }
         public List<DirectDebit> DirectDebits { get; private set; }
+        public List<OpenBankingMerchant> OpenBankingMerchants { get; private set; }
 
         //for ef
         private ExpenseRecipient()
@@ -22,6 +23,7 @@ namespace Pet.ExpenseTracking.Domain.ExpenseRecipientAggregate
             PosTerminals = new List<PosTerminal>();
             Ibans = new List<Iban>();
             DirectDebits = new List<DirectDebit>();
+            OpenBankingMerchants = new List<OpenBankingMerchant>();
         }
 
         public ExpenseRecipient(string name)
@@ -67,6 +69,12 @@ namespace Pet.ExpenseTracking.Domain.ExpenseRecipientAggregate
         {
             DirectDebits.Add(new DirectDebit(directDebitCode, ExpenseRecipientId));
             this.AddEvent(new DirectDebitAdded(directDebitCode, ExpenseRecipientId));
+        }
+
+        public void AddOpenBankingMerchant(string merchantCode)
+        {
+            OpenBankingMerchants.Add(new OpenBankingMerchant(merchantCode, ExpenseRecipientId));
+            this.AddEvent(new OpenBankingMerchantAdded(merchantCode, ExpenseRecipientId));
         }
 
 

@@ -11,6 +11,7 @@ namespace Pet.ExpenseTracking.Domain.ExpenseAggregate
 
         Task<List<Expense>> FindByExpenseRecipientAndMonth(Guid expenseRecipientId, int expenseMonth);
         Task<List<Expense>> FindByPosTerminal(string posTerminal);
+        Task<List<Expense>> FindByOpenBankingMerchant(string merchant);
         Task<List<Expense>> FindByIban(string iban);
         Task<List<Expense>> FindByDirectDebitCode(string directDebitCode);
         Task AddAsync(Expense entity);

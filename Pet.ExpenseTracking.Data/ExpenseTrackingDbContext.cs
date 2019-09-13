@@ -21,7 +21,7 @@ namespace Pet.ExpenseTracking.Data
             modelBuilder.ApplyConfiguration(new DirectDebitConfiguration());
             modelBuilder.ApplyConfiguration(new SavingsAccountConfiguration());
             modelBuilder.ApplyConfiguration(new SavingsTransactionConfiguration());
-            
+            modelBuilder.ApplyConfiguration(new OpenBankingMerchantConfiguration());
         }
     }
 }

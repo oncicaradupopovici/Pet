@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Pet.BankingDomain\Pet.Banking.Domain.csproj" />
+    <ProjectReference Include="..\Pet.OpenBanking.Domain\Pet.OpenBanking.Domain.csproj" />
   </ItemGroup>
 
 </Project>
