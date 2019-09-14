@@ -50,3 +50,5 @@
 /Pet.Connector.Finq/bin/Debug/netstandard2.0
 /Pet.OpenBanking.Data/bin/Debug/netstandard2.0
 /Pet.OpenBanking.Data/obj
+/Pet.Connector.Finq.Tests/bin/Debug/netcoreapp2.2
+/Pet.Connector.Finq.Tests/obj

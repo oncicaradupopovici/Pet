@@ -7,6 +7,6 @@
         BankTransfer = 3,
         DirectDebitPayment = 4,
         CashExpense = 5,
-        OpenBankingPayment = 5
+        OpenBankingPayment = 6
     }
 }

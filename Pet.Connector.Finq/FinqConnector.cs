@@ -21,8 +21,8 @@ namespace Pet.Connector.Finq
             {
                 NamingStrategy = new CamelCaseNamingStrategy()
             };
-            var finqTransactions = JsonConvert.DeserializeObject(response,
-                new JsonSerializerSettings {ContractResolver = contractResolver}) as IEnumerable<FinqTransaction>;
+            var finqTransactions = JsonConvert.DeserializeObject<IEnumerable<FinqTransaction>>(response,
+                new JsonSerializerSettings { ContractResolver = contractResolver });
 
             var result = (finqTransactions ?? throw new InvalidOperationException()).Where(IsPayment).Select(ToCommand);
             return result;
@@ -36,7 +36,7 @@ namespace Pet.Connector.Finq
 
         private Command ToCommand(FinqTransaction t)
         {
-            return new AddOpenBankingPayment.Command(t.Id, t.Data.Amount, t.Data.BookingDateTime, t.Data.Currency, t.Data.ExchangeRate, t.Data.Details.Merchant, t.Data.Details.Category, t.Data.Details.Location );
+            return new AddOpenBankingPayment.Command(t.Id, t.Data.Amount, t.Data.BookingDateTime, t.Data.Currency, t.Data.ExchangeRate, t.Data.Details.Merchant, t.Data.Details.Category, t.Data.Details.Location);
         }
 
         private bool IsPayment(FinqTransaction t)
@@ -45,8 +45,8 @@ namespace Pet.Connector.Finq
         }
 
         private Task<string> CallFinqApi()
-            {
-                return Task.FromResult(@"[
+        {
+            return Task.FromResult(@"[
     {
        ""account_id"":""f4aa06c8-d558-11e9-ba44-931e943701a5"",
        ""data"":{
@@ -11248,7 +11248,7 @@ namespace Pet.Connector.Finq
        ""id"":""f5be4fb0-d558-11e9-8d27-2be0afd9937a""
     }
  ]");
-            }
+        }
 
 
     }
