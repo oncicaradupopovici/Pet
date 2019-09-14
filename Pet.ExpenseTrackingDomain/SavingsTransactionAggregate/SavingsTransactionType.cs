@@ -3,5 +3,6 @@
     public enum SavingsTransactionType
     {
         BankTransfer = 1,
+        OpenBankingPayment = 2
     }
 }

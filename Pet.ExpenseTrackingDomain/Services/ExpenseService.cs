@@ -28,7 +28,7 @@ namespace Pet.ExpenseTracking.Domain.Services
             var expenseRecipient =
                 await _expenseRecipientRepository.FindByPosTerminal(notification.PosTerminalCode);
 
-            var expense = _expenseFactory.CreateFrom(ExpenseType.PosPayment, notification.Value, notification.PaymentDate, expenseRecipient?.ExpenseRecipientId, expenseRecipient?.ExpenseCategoryId, notification.PosTerminalCode, notification.PosTerminalCode, null, notification.PosPaymentId);
+            var expense = _expenseFactory.CreateFrom(ExpenseType.PosPayment, notification.Value, notification.PaymentDate, expenseRecipient?.ExpenseRecipientId, expenseRecipient?.ExpenseCategoryId, notification.PosTerminalCode, notification.PosTerminalCode, null, null, notification.PosPaymentId);
             return expense;
         }
 
@@ -37,7 +37,7 @@ namespace Pet.ExpenseTracking.Domain.Services
             var expenseRecipient =
                 await _expenseRecipientRepository.FindByOpenBankingMerchant(notification.Merchant);
 
-            var expense = _expenseFactory.CreateFrom(ExpenseType.OpenBankingPayment, notification.Value, notification.PaymentDate, expenseRecipient?.ExpenseRecipientId, expenseRecipient?.ExpenseCategoryId, notification.Merchant, notification.Merchant, notification.Location, notification.OpenBankingPaymentId);
+            var expense = _expenseFactory.CreateFrom(ExpenseType.OpenBankingPayment, notification.Value, notification.PaymentDate, expenseRecipient?.ExpenseRecipientId, expenseRecipient?.ExpenseCategoryId, notification.Merchant, notification.Merchant, notification.Location, notification.Category, notification.OpenBankingPaymentId);
             return expense;
         }
 
@@ -46,7 +46,7 @@ namespace Pet.ExpenseTracking.Domain.Services
             var expenseRecipient =
                 await _expenseRecipientRepository.FindByIban(notification.Iban);
 
-            var expense = _expenseFactory.CreateFrom(ExpenseType.BankTransfer, notification.Value, notification.PaymentDate, expenseRecipient?.ExpenseRecipientId, expenseRecipient?.ExpenseCategoryId, notification.Iban, notification.RecipientName, notification.Details, notification.BankTransferId);
+            var expense = _expenseFactory.CreateFrom(ExpenseType.BankTransfer, notification.Value, notification.PaymentDate, expenseRecipient?.ExpenseRecipientId, expenseRecipient?.ExpenseCategoryId, notification.Iban, notification.RecipientName, notification.Details, null, notification.BankTransferId);
             return expense;
         }
 
@@ -55,13 +55,13 @@ namespace Pet.ExpenseTracking.Domain.Services
             var expenseRecipient =
                 await _expenseRecipientRepository.FindByDirectDebit(notification.DirectDebitCode);
 
-            var expense = _expenseFactory.CreateFrom(ExpenseType.DirectDebitPayment, notification.Value, notification.PaymentDate, expenseRecipient?.ExpenseRecipientId, expenseRecipient?.ExpenseCategoryId, notification.DirectDebitCode, notification.DirectDebitCode, notification.Details, notification.DirectDebitPaymentId);
+            var expense = _expenseFactory.CreateFrom(ExpenseType.DirectDebitPayment, notification.Value, notification.PaymentDate, expenseRecipient?.ExpenseRecipientId, expenseRecipient?.ExpenseCategoryId, notification.DirectDebitCode, notification.DirectDebitCode, notification.Details, null, notification.DirectDebitPaymentId);
             return expense;
         }
 
         public Task<Expense> CreateExpenseWhen(CashWithdrawalAdded notification)
         {
-            var expense = _expenseFactory.CreateFrom(ExpenseType.CashWithdrawal, notification.Value, notification.WithdrawalDate, null, null, null, notification.CashTerminal, null, notification.CashWithdrawalId);
+            var expense = _expenseFactory.CreateFrom(ExpenseType.CashWithdrawal, notification.Value, notification.WithdrawalDate, null, null, null, notification.CashTerminal, null, null, notification.CashWithdrawalId);
             return Task.FromResult(expense);
         }
 

@@ -6,6 +6,7 @@ using NBB.Application.DataContracts;
 using NBB.Data.Abstractions;
 using Pet.ExpenseTracking.Domain.ExpenseAggregate;
 using Pet.ExpenseTracking.Domain.SavingsAccountAggregate;
+using Pet.ExpenseTracking.Domain.SavingsCategoryAggregate;
 
 namespace Pet.Application.Commands.ExpenseTracking
 {
@@ -25,11 +26,13 @@ namespace Pet.Application.Commands.ExpenseTracking
         {
             private readonly IExpenseRepository _expenseRepository;
             private readonly ISavingsAccountRepository _savingsAccountRepository;
+            private readonly ISavingsCategoryRepository _savingsCategoryRepository;
 
-            public Handler(IExpenseRepository expenseRepository, ISavingsAccountRepository savingsAccountRepository)
+            public Handler(IExpenseRepository expenseRepository, ISavingsAccountRepository savingsAccountRepository, ISavingsCategoryRepository savingsCategoryRepository)
             {
                 _expenseRepository = expenseRepository;
                 _savingsAccountRepository = savingsAccountRepository;
+                _savingsCategoryRepository = savingsCategoryRepository;
             }
 
             public async Task Handle(Command request, CancellationToken cancellationToken)
@@ -39,6 +42,11 @@ namespace Pet.Application.Commands.ExpenseTracking
                 {
                     await _savingsAccountRepository.AddAsync(new SavingsAccount(expense.ExpenseRecipientDetailCode));
                     await _savingsAccountRepository.SaveChangesAsync();
+                }
+                else if(expense.ExpenseType == ExpenseType.OpenBankingPayment)
+                {
+                    await _savingsCategoryRepository.AddAsync(new SavingsCategory(expense.SourceCategory));
+                    await _savingsCategoryRepository.SaveChangesAsync();
                 }
             }
         }

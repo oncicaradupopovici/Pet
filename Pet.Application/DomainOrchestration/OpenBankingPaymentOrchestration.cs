@@ -9,6 +9,7 @@ using Pet.ExpenseTracking.Domain.ExpenseRecipientAggregate;
 using Pet.ExpenseTracking.Domain.ExpenseRecipientAggregate.DomainEvents;
 using Pet.ExpenseTracking.Domain.Services;
 using Pet.OpenBanking.Domain.OpenBankingPaymentAggregate.DomainEvents;
+using Pet.ExpenseTracking.Domain.SavingsTransactionAggregate;
 
 namespace Pet.Application.DomainOrchestration
 {
@@ -20,28 +21,41 @@ namespace Pet.Application.DomainOrchestration
         private readonly ExpenseService _expenseService;
         private readonly IExpenseRecipientRepository _expenseRecipientRepository;
         private readonly ExpenseRecipientService _expenseRecipientService;
+        private readonly ISavingsTransactionRepository _savingsTransactionRepository;
+        private readonly SavingsService _savingsService;
 
-        public OpenBankingPaymentOrchestration(IExpenseRepository expenseRepository, ExpenseService expenseService, IExpenseRecipientRepository expenseRecipientRepository, ExpenseRecipientService expenseRecipientService)
+        public OpenBankingPaymentOrchestration(IExpenseRepository expenseRepository, ExpenseService expenseService, IExpenseRecipientRepository expenseRecipientRepository, ExpenseRecipientService expenseRecipientService, ISavingsTransactionRepository savingsTransactionRepository, SavingsService savingsService)
         {
             _expenseRepository = expenseRepository;
             _expenseService = expenseService;
             _expenseRecipientRepository = expenseRecipientRepository;
             _expenseRecipientService = expenseRecipientService;
+            _savingsTransactionRepository = savingsTransactionRepository;
+            _savingsService = savingsService;
         }
 
         public async Task Handle(OpenBankingPaymentAdded notification, CancellationToken cancellationToken)
         {
-            var expenseRecipient = await _expenseRecipientService.AddOpenBankingMerchantWhen(notification);
-            if (expenseRecipient != null)
+            var savingsTransaction = await _savingsService.CreateSavingsTransactionWhen(notification);
+            if (savingsTransaction != null)
             {
-                await _expenseRecipientRepository.SaveChangesAsync();
+                await _savingsTransactionRepository.AddAsync(savingsTransaction);
+                await _savingsTransactionRepository.SaveChangesAsync();
             }
-
-            var expense = await _expenseService.CreateExpenseWhen(notification);
-            if (expense != null)
+            else
             {
-                await _expenseRepository.AddAsync(expense);
-                await _expenseRepository.SaveChangesAsync();
+                var expenseRecipient = await _expenseRecipientService.AddOpenBankingMerchantWhen(notification);
+                if (expenseRecipient != null)
+                {
+                    await _expenseRecipientRepository.SaveChangesAsync();
+                }
+
+                var expense = await _expenseService.CreateExpenseWhen(notification);
+                if (expense != null)
+                {
+                    await _expenseRepository.AddAsync(expense);
+                    await _expenseRepository.SaveChangesAsync();
+                }
             }
         }
 

@@ -12,6 +12,7 @@ begin
 		[ExpenseRecipientDetailCode] [varchar](500) NULL,
 		[Details1] [varchar](500) NULL,
 		[Details2] [varchar](500) NULL,
+		SourceCategory varchar(100) null
 
 		CONSTRAINT [PK_Expense] PRIMARY KEY CLUSTERED (ExpenseId),
 		CONSTRAINT [FK_Expense_ExpenseCategoryId] FOREIGN KEY([ExpenseCategoryId]) REFERENCES [ExpenseCategory] ([ExpenseCategoryId]),

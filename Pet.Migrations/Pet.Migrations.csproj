@@ -21,6 +21,7 @@
     <None Remove="SqlScripts\Tables\012.SavingsTransaction.sql" />
     <None Remove="SqlScripts\Tables\013.OpenBankingPayment.sql" />
     <None Remove="SqlScripts\Tables\014.OpenBankingMerchant.sql" />
+    <None Remove="SqlScripts\Tables\015.SavingsCategory.sql" />
     <None Remove="SqlScripts\Views\002.vwExpense.sql" />
     <None Remove="SqlScripts\Views\003.vwExpenseByCategory.sql" />
     <None Remove="SqlScripts\Views\004.vwExpenseMonth.sql" />
@@ -28,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="SqlScripts\Tables\015.SavingsCategory.sql" />
     <EmbeddedResource Include="SqlScripts\Tables\014.OpenBankingMerchant.sql" />
     <EmbeddedResource Include="SqlScripts\Tables\013.OpenBankingPayment.sql" />
     <EmbeddedResource Include="SqlScripts\Tables\006.BankTransfer.sql" />

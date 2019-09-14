@@ -7,6 +7,7 @@ using Pet.ExpenseTracking.Domain.ExpenseAggregate;
 using Pet.ExpenseTracking.Domain.ExpenseCategoryAggregate;
 using Pet.ExpenseTracking.Domain.ExpenseRecipientAggregate;
 using Pet.ExpenseTracking.Domain.SavingsAccountAggregate;
+using Pet.ExpenseTracking.Domain.SavingsCategoryAggregate;
 using Pet.ExpenseTracking.Domain.SavingsTransactionAggregate;
 using Pet.Tenant.Abstractions;
 
@@ -29,6 +30,9 @@ namespace Pet.ExpenseTracking.Data
 
             services.AddScoped<IUow<SavingsAccount>, EfUow<SavingsAccount, ExpenseTrackingDbContext>>();
             services.AddScoped<ISavingsAccountRepository, SavingsAccountRepository>();
+
+            services.AddScoped<IUow<SavingsCategory>, EfUow<SavingsCategory, ExpenseTrackingDbContext>>();
+            services.AddScoped<ISavingsCategoryRepository, SavingsCategoryRepository>();
 
             services.AddScoped<IUow<SavingsTransaction>, EfUow<SavingsTransaction, ExpenseTrackingDbContext>>();
             services.AddScoped<ISavingsTransactionRepository, SavingsTransactionRepository>();
