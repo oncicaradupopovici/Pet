@@ -79,7 +79,7 @@ namespace Pet.Application.Queries.ExpenseTracking
                     x.ExpenseMonth,
                     _expenseMonthService.GetExpenseMonthName(x.ExpenseMonth),
                     x.ExpenseCategoryId.HasValue ? new Model.CategoryModel(x.ExpenseCategoryId.Value, x.ExpenseCategoryName) : null
-                    )).OrderByDescending(x => x.Value).ToList();
+                    )).OrderBy(x => x.ExpenseMonth).ToList();
 
                 return result;
             }
