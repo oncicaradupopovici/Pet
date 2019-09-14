@@ -68,6 +68,10 @@ namespace Pet.Application.Commands.ExpenseTracking
                 {
                     expenseRecipient.AddDirectDebit(expense.ExpenseRecipientDetailCode);
                 }
+                else if (expense.ExpenseType == ExpenseType.OpenBankingPayment)
+                {
+                    expenseRecipient.AddOpenBankingMerchant(expense.ExpenseRecipientDetailCode);
+                }
 
                 if (request.Recipient.IsNew)
                 {

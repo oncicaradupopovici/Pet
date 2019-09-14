@@ -49,7 +49,7 @@ namespace Pet.Web
             services.AddReadModelDataAccess();
             services.AddPetApplication();       
             services.AddIngConnector();
-            services.AddFinqConnector();
+            services.AddFinqConnector(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29215.179
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.757
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pet.Application", "Pet.Application\Pet.Application.csproj", "{9AD286C6-F78E-4580-B384-E8E99BEAC596}"
 EndProject
@@ -57,7 +57,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pet.Connector.Finq", "Pet.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pet.OpenBanking.Domain", "Pet.OpenBanking.Domain\Pet.OpenBanking.Domain.csproj", "{925FA785-62E5-448A-9D66-E18BAAE3B1E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pet.OpenBanking.Data", "Pet.OpenBanking.Data\Pet.OpenBanking.Data.csproj", "{AEEFE6A4-AA06-4F1D-BC77-FF8C168A4CE4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pet.OpenBanking.Data", "Pet.OpenBanking.Data\Pet.OpenBanking.Data.csproj", "{AEEFE6A4-AA06-4F1D-BC77-FF8C168A4CE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pet.Connector.Finq.Tests", "Pet.Connector.Finq.Tests\Pet.Connector.Finq.Tests.csproj", "{3D6D4A19-3301-4A3F-9F60-2372C386FEDD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -133,6 +135,10 @@ Global
 		{AEEFE6A4-AA06-4F1D-BC77-FF8C168A4CE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEEFE6A4-AA06-4F1D-BC77-FF8C168A4CE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEEFE6A4-AA06-4F1D-BC77-FF8C168A4CE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D6D4A19-3301-4A3F-9F60-2372C386FEDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D6D4A19-3301-4A3F-9F60-2372C386FEDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D6D4A19-3301-4A3F-9F60-2372C386FEDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D6D4A19-3301-4A3F-9F60-2372C386FEDD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -161,6 +167,7 @@ Global
 		{675FDDF4-5E00-4964-9576-D497039DA94C} = {8B50F3B6-1398-4CDD-8F26-F3F56722DE9E}
 		{925FA785-62E5-448A-9D66-E18BAAE3B1E9} = {5BA16564-AC04-44EF-958F-6CF0A010A5D2}
 		{AEEFE6A4-AA06-4F1D-BC77-FF8C168A4CE4} = {4B0DCDA9-0F43-4F22-BB01-F91360BA8216}
+		{3D6D4A19-3301-4A3F-9F60-2372C386FEDD} = {ED4C55B0-CD28-4816-9C7A-4CAB3A8B04AE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AB8F72E6-E2A4-4FA3-BBC7-B469332B2A1C}
