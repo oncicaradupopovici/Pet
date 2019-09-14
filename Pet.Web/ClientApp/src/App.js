@@ -7,6 +7,7 @@ import ExpensesPage from './components/Expenses/ExpensesPage';
 import AnalyticsPage from './components/Analytics/AnalyticsPage';
 import Tenant from './components/Tenant';
 import ExpenseCategoryEvolutionChart from './components/Charts/ExpenseCategoryEvolutionChart';
+import ExpenseMonthChartPage from './components/Charts/ExpenseMonthChartPage';
 
 export default () => (
   <Layout>
@@ -15,6 +16,7 @@ export default () => (
     <Route path='/expenses' component={ExpensesPage} />
     <Route path='/analytics' component={AnalyticsPage} />
     <Route path='/tenant/:tenantId' component={Tenant} />
-    <Route path='/chart' component={ExpenseCategoryEvolutionChart} />
+    <Route exact path='/chart' component={ExpenseCategoryEvolutionChart} />
+    <Route exact path='/chart/month' component={ExpenseMonthChartPage} />
   </Layout>
 );
