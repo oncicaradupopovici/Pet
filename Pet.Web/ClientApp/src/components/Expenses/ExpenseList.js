@@ -17,6 +17,7 @@ function getExpenseTypeName(expense) {
     case 3: return 'Bank transfer'
     case 4: return 'Direct debit payment'
     case 5: return 'Cash expense'
+    case 6: return 'Finq Payment'
     default: return 'Unknown'
   }
 }

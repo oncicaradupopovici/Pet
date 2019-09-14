@@ -8,7 +8,7 @@ begin
 		ExchangeRate decimal(9,2) NOT NULL,
 		Merchant varchar(100) NOT NULL,
 		Category varchar(100) NOT NULL,
-
+		Location varchar(100) NOT NULL,
 
 		CONSTRAINT [PK_OpenBankingPayment] PRIMARY KEY CLUSTERED (OpenBankingPaymentId)
 	)
