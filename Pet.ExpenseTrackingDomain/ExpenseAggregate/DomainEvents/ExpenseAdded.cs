@@ -14,10 +14,11 @@ namespace Pet.ExpenseTracking.Domain.ExpenseAggregate.DomainEvents
         public string ExpenseRecipientDetailCode { get; }
         public string Details1 { get; }
         public string Details2 { get; }
+        public string SourceCategory { get; }
         public Guid? ExpenseSourceId { get; }
         public int ExpenseMonth { get; }
 
-        public ExpenseAdded(Guid expenseId, ExpenseType expenseType, decimal value, DateTime expenseDate, Guid? expenseRecipientId, int? expenseCategoryId, string expenseRecipientDetailCode, string details1, string details2, Guid? expenseSourceId, int expenseMonth,  DomainEventMetadata metadata = null)
+        public ExpenseAdded(Guid expenseId, ExpenseType expenseType, decimal value, DateTime expenseDate, Guid? expenseRecipientId, int? expenseCategoryId, string expenseRecipientDetailCode, string details1, string details2, string sourceCategory, Guid? expenseSourceId, int expenseMonth,  DomainEventMetadata metadata = null)
             : base(metadata)
         {
             ExpenseId = expenseId;
@@ -31,6 +32,7 @@ namespace Pet.ExpenseTracking.Domain.ExpenseAggregate.DomainEvents
             ExpenseMonth = expenseMonth;
             Details1 = details1;
             Details2 = details2;
+            SourceCategory = sourceCategory;
         }
     }
 }

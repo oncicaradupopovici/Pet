@@ -30,6 +30,15 @@ function isBankTransfer(expense) {
   return expense.expenseType === 3;
 }
 
+function isOpenBankingPayment(expense){
+  return expense.expenseType === 6;
+}
+
+function canMoveToSavings(expense){
+  return (isBankTransfer(expense) && expense.expenseRecipient === null) || 
+  (isOpenBankingPayment(expense) && expense.sourceCategory !== null)
+}
+
 class ExpenseList extends Component {
   state = {
     recipientModalOpen: false,
@@ -125,7 +134,7 @@ class ExpenseList extends Component {
                   : <Button color="primary" onClick={this.showCategoryModal(expense)}>Assign</Button>}
                 </td>
                 <td>{expense.value}</td>
-                <td>{isBankTransfer(expense) && expense.expenseRecipient === null && <Button color="primary" onClick={this.showMoveToSavingsModal(expense)}>To savings</Button>}</td>
+                <td>{canMoveToSavings(expense) && <Button color="primary" onClick={this.showMoveToSavingsModal(expense)}>To savings</Button>}</td>
               </tr>
             )}
           </tbody>

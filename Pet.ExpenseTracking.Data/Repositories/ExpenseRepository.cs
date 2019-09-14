@@ -67,6 +67,15 @@ namespace Pet.ExpenseTracking.Data.Repositories
             return expenses;
         }
 
+        public async Task<List<Expense>> FindBySourceCategory(string category)
+        {
+            var expenses = await _dbContext.Set<Expense>()
+                .Where(x => x.ExpenseType == ExpenseType.OpenBankingPayment && x.ExpenseSourceId.HasValue && x.SourceCategory == category)
+                .ToListAsync();
+
+            return expenses;
+        }
+
         public async Task<List<Expense>> FindByDirectDebitCode(string directDebitCode)
         {
             var expenses = await _dbContext.Set<Expense>()
