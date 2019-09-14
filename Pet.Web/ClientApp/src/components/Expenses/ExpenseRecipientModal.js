@@ -9,7 +9,7 @@ import Select from 'react-select';
 const initialState = {
     selectedExpenseRecipient: null,
     newExpenseRecipientName: '',
-    isNew: false,
+    isNew: true,
 };
 
 class ExpenseRecipientModal extends Component {
@@ -24,7 +24,7 @@ class ExpenseRecipientModal extends Component {
         if (this.props.expense !== prevProps.expense && this.props.expense) {
             this.setState({ 
                 ...initialState, 
-                newExpenseRecipientName: this.props.expense.expenseRecipientDetailCode,
+                newExpenseRecipientName: this.props.expense.expenseRecipientDetailCode || '',
                 selectedExpenseRecipient: this.props.expense.expenseRecipient
              })
         }
