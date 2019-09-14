@@ -9,7 +9,7 @@ import Select from 'react-select';
 const initialState = {
     selectedExpenseCategory: null,
     newExpenseCategoryName: '',
-    isNew: false,
+    isNew: true,
     justThisOne: false
 }
 
@@ -25,6 +25,7 @@ class ExpenseCategoryModal extends Component {
         if (this.props.expense !== prevProps.expense && this.props.expense) {
             this.setState({
                 ...initialState,
+                newExpenseCategoryName: this.props.expense.sourceCategory || '',
                 selectedExpenseCategory: this.props.expense.expenseCategory
             });
         }
