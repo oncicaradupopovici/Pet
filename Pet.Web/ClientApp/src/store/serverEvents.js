@@ -6,6 +6,7 @@ export const ExpenseCategoryChanged = "ExpenseCategoryChanged";
 export const ExpenseDeleted = "ExpenseDeleted";
 export const ExpenseRecipientAdded = "ExpenseRecipientAdded";
 export const ExpenseCategoryAdded = "ExpenseCategoryAdded";
+export const SavingsTransactionAdded = "SavingsTransactionAdded";
 
 export function dispatchServerEvents(dispatch, events) {
     for (const { eventType, payload } of events) {

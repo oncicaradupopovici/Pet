@@ -13,7 +13,8 @@ select
 	e.ExpenseSourceId as ExpenseSourceId,
 	e.ExpenseRecipientDetailCode,
 	e.Details1,
-	e.Details2
+	e.Details2,
+	e.SourceCategory
 from Expense e
 	left join ExpenseRecipient r on e.ExpenseRecipientId = r.ExpenseRecipientId
 	left join ExpenseCategory c on e.ExpenseCategoryId = c.ExpenseCategoryId

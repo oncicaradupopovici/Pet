@@ -3,6 +3,7 @@ import { normalize, denormalize } from 'normalizr';
 import { expenseMonthSchema } from './schemas';
 import { updateEntities } from './Entities';
 import { combineReducers } from 'redux';
+import { ExpenseAdded, ExpenseDeleted, SavingsTransactionAdded } from './serverEvents';
 
 const EXPENSE_MONTH_LIST_LOADING = 'EXPENSE_MONTH_LIST_LOADING';
 const EXPENSE_MONTH_LIST_LOADED_SUCCESSFULLY = 'EXPENSE_MONTH_LIST_LOADED_SUCCESSFULLY';
@@ -109,6 +110,13 @@ const currentReducer = (state, action) => {
       expenseMonthId: action.payload.expenseMonth.expenseMonthId,
       loading: false,
       loaded: true
+    };
+  }
+
+  if ([ExpenseAdded, ExpenseDeleted, SavingsTransactionAdded].includes(action.type)) {
+    return {
+      ...state,
+      loaded: false
     };
   }
 

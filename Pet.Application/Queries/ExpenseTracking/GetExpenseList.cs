@@ -52,8 +52,10 @@ namespace Pet.Application.Queries.ExpenseTracking
             public string ExpenseRecipientDetailCode { get; }
             public string Details1 { get; }
             public string Details2 { get; }
+            public string SourceCategory { get; }
+            
 
-            public Model(Guid expenseId, byte expenseType, decimal value, DateTime expenseDate, RecipientModel expenseRecipient, CategoryModel expenseCategory, Guid? expenseSourceId, string expenseRecipientDetailCode, string details1, string details2)
+            public Model(Guid expenseId, byte expenseType, decimal value, DateTime expenseDate, RecipientModel expenseRecipient, CategoryModel expenseCategory, Guid? expenseSourceId, string expenseRecipientDetailCode, string details1, string details2, string sourceCategory)
             {
                 ExpenseId = expenseId;
                 ExpenseType = expenseType;
@@ -65,6 +67,7 @@ namespace Pet.Application.Queries.ExpenseTracking
                 ExpenseRecipientDetailCode = expenseRecipientDetailCode;
                 Details1 = details1;
                 Details2 = details2;
+                SourceCategory = sourceCategory;
             }
         }
 
@@ -92,7 +95,8 @@ namespace Pet.Application.Queries.ExpenseTracking
                     x.ExpenseSourceId,
                     x.ExpenseRecipientDetailCode,
                     x.Details1,
-                    x.Details2
+                    x.Details2,
+                    x.SourceCategory
                     )).OrderByDescending(x => x.ExpenseDate).ToList();
 
                 return result;

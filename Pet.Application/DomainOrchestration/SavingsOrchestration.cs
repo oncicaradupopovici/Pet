@@ -7,11 +7,13 @@ using Pet.ExpenseTracking.Domain.ExpenseAggregate;
 using Pet.ExpenseTracking.Domain.SavingsAccountAggregate.DomainEvents;
 using Pet.ExpenseTracking.Domain.SavingsTransactionAggregate;
 using Pet.ExpenseTracking.Domain.Services;
+using Pet.ExpenseTracking.Domain.SavingsCategoryAggregate.DomainEvents;
 
 namespace Pet.Application.DomainOrchestration
 {
     public class SavingsOrchestration :
-        INotificationHandler<SavingsAccountAdded>
+        INotificationHandler<SavingsAccountAdded>,
+        INotificationHandler<SavingsCategoryAdded>
     {
         private readonly IExpenseRepository _expenseRepository;
         private readonly ISavingsTransactionRepository _savingsTransactionRepository;
@@ -37,7 +39,21 @@ namespace Pet.Application.DomainOrchestration
                 return _expenseRepository.UpdateAsync(x);
             }));
             await _expenseRepository.SaveChangesAsync();
+        }
 
+        public async Task Handle(SavingsCategoryAdded notification, CancellationToken cancellationToken)
+        {
+            var savings = await _savingsService.CreateSavingsTransactionsWhen(notification);
+            await Task.WhenAll(savings.Select(_savingsTransactionRepository.AddAsync));
+            await _savingsTransactionRepository.SaveChangesAsync();
+
+            var expenses = await _expenseRepository.FindBySourceCategory(notification.Category);
+            await Task.WhenAll(expenses.Select(x =>
+            {
+                x.Delete();
+                return _expenseRepository.UpdateAsync(x);
+            }));
+            await _expenseRepository.SaveChangesAsync();
         }
     }
 }

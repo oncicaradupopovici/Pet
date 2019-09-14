@@ -19,18 +19,17 @@ namespace Pet.ExpenseTracking.Domain.ExpenseAggregate
         public string ExpenseRecipientDetailCode { get; private set; }
         public string Details1 { get; private set; }
         public string Details2 { get; private set; }
+        public string SourceCategory { get; private set; }
         public Guid? ExpenseSourceId { get; private set; }
 
 
 
         //needed 4 repository
-        private Expense(string details1, string details2)
+        private Expense()
         {
-            Details1 = details1;
-            Details2 = details2;
         }
 
-        internal Expense(ExpenseType expenseType, decimal value, DateTime expenseDate, int expenseMonth, Guid? expenseRecipientId, int? expenseCategoryId, string expenseRecipientDetailCode, string details1, string details2, Guid? expenseSourceId)
+        internal Expense(ExpenseType expenseType, decimal value, DateTime expenseDate, int expenseMonth, Guid? expenseRecipientId, int? expenseCategoryId, string expenseRecipientDetailCode, string details1, string details2, string sourceCategory, Guid? expenseSourceId)
         {
             ExpenseId = Guid.NewGuid();
             ExpenseType = expenseType;
@@ -42,9 +41,10 @@ namespace Pet.ExpenseTracking.Domain.ExpenseAggregate
             ExpenseRecipientDetailCode = expenseRecipientDetailCode;
             Details1 = details1;
             Details2 = details2;
+            SourceCategory = sourceCategory;
             ExpenseSourceId = expenseSourceId;
 
-            AddEvent(new ExpenseAdded(ExpenseId, ExpenseType, Value, ExpenseDate, ExpenseRecipientId, ExpenseCategoryId, ExpenseRecipientDetailCode, Details1, Details2,  ExpenseSourceId, ExpenseMonth));
+            AddEvent(new ExpenseAdded(ExpenseId, ExpenseType, Value, ExpenseDate, ExpenseRecipientId, ExpenseCategoryId, ExpenseRecipientDetailCode, Details1, Details2, SourceCategory,  ExpenseSourceId, ExpenseMonth));
         }
 
 

@@ -17,5 +17,6 @@ namespace Pet.ReadModel.Projections
         public string ExpenseRecipientDetailCode { get; set; }
         public string Details1 { get; set; }
         public string Details2 { get; set; }
+        public string SourceCategory { get; set; }
     }
 }
