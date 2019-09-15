@@ -8,7 +8,7 @@ const ExpenseMonthByRecipient = (props) => {
     const { expenses, loadExpenseByRecipientList, expenseMonthId } = props;
     useEffect(() => { loadExpenseByRecipientList(expenseMonthId) });
 
-    const data = expenses.map(e => {debugger
+    const data = expenses.map(e => {
         const expenseRecipient = e.expenseRecipient || { expenseRecipientId: 0, name: '' };
         return { id: expenseRecipient.name, label: expenseRecipient.name, value: e.value };
     });
