@@ -29,5 +29,11 @@ namespace Pet.Web.Controllers
             return Ok(result);
         }
 
+        [HttpGet("byCategory/range")]
+        public async Task<IActionResult> GetExpenseByCategoryInRangeList([FromQuery] GetExpenseByCategoryInRangeList.Query query)
+        {
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
     }
 }
