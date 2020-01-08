@@ -3,6 +3,8 @@ import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, Ca
 import classnames from 'classnames';
 import ExpenseByCategoryList from './ExpenseByCategoryList';
 import ExpenseByRecipientList from './ExpenseByRecipientList';
+import ExpenseMonthByCategory from '../Charts/ExpenseMonthByCategory';
+import ExpenseMonthByRecipient from '../Charts/ExpenseMonthByRecipient';
 
 
 export default class Analytics extends Component {
@@ -43,9 +45,11 @@ export default class Analytics extends Component {
         <TabContent activeTab={this.state.activeTab}>
           <TabPane tabId="1">
             <ExpenseByCategoryList expenseMonthId={expenseMonthId} />
+            <ExpenseMonthByCategory expenseMonthId={expenseMonthId} />
           </TabPane>
           <TabPane tabId="2">
             <ExpenseByRecipientList expenseMonthId={expenseMonthId} />
+            <ExpenseMonthByRecipient expenseMonthId={expenseMonthId} />
           </TabPane>
         </TabContent>
       </div>
