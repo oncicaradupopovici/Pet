@@ -44,12 +44,12 @@ export default class Analytics extends Component {
         </Nav>
         <TabContent activeTab={this.state.activeTab}>
           <TabPane tabId="1">
-            <ExpenseByCategoryList expenseMonthId={expenseMonthId} />
             <ExpenseMonthByCategory expenseMonthId={expenseMonthId} />
+            <ExpenseByCategoryList expenseMonthId={expenseMonthId} />
           </TabPane>
           <TabPane tabId="2">
-            <ExpenseByRecipientList expenseMonthId={expenseMonthId} />
             <ExpenseMonthByRecipient expenseMonthId={expenseMonthId} />
+            <ExpenseByRecipientList expenseMonthId={expenseMonthId} />
           </TabPane>
         </TabContent>
       </div>
