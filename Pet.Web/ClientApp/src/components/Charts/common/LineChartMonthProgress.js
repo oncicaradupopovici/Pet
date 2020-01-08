@@ -32,7 +32,7 @@ const LineChartMonthProgress = ({ data, onPointClick, setCurrentExpenseMonth }) 
             <div style={{ background: 'white', color: 'inherit', fontSize: 'inherit', borderRadius: '2px', boxShadow: 'rgba(0, 0, 0, 0.25) 0px 1px 2px', padding: '5px 9px' }}>
                 <div style={{ whiteSpace: 'pre', display: 'flex', alignItems: 'left', flexDirection: 'column' }}>
                     <div style={{ display: 'flex' }}>
-                        <span style={{ width: '12px', height: '12px', background: 'rgb(241, 225, 91)', marginRight: '7px', marginTop: '7px' }}>                    </span>
+                        <span style={{ width: '12px', height: '12px', background: point.serieColor, marginRight: '7px', marginTop: '7px' }}>                    </span>
                         <span>Category: <strong>{point.serieId}</strong></span>
                     </div>
                     <div >
