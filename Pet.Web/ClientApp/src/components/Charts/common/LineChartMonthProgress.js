@@ -1,24 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import { ResponsiveLine } from '@nivo/line';
-import { actionCreators } from '../../../store/ExpenseMonth';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 // make sure parent container have a defined height when using
 // responsive component, otherwise height will be 0 and
 // no chart will be rendered.
 // website examples showcase many properties,
 // you'll often use just a few of them.
-const LineChartMonthProgress = ({ data, onPointClick, setCurrentExpenseMonth }) => {
+const LineChartMonthProgress = ({ data }) => {
     const [hiddenIds, setHiddenIds] = useState([]);
-
-    const handleChartClick = useCallback((point, _event) => {
-        if (!point || !point.data) {
-            return;
-        }
-
-        setCurrentExpenseMonth({ expenseMonthId: point.data.expenseMonthId });
-        onPointClick(point);
-    }, [setCurrentExpenseMonth, onPointClick]);
 
     const handleLegendClick = useCallback((point, _event) => {
         const index = hiddenIds.indexOf(point.id);
@@ -32,7 +20,7 @@ const LineChartMonthProgress = ({ data, onPointClick, setCurrentExpenseMonth }) 
             <div style={{ background: 'white', color: 'inherit', fontSize: 'inherit', borderRadius: '2px', boxShadow: 'rgba(0, 0, 0, 0.25) 0px 1px 2px', padding: '5px 9px' }}>
                 <div style={{ whiteSpace: 'pre', display: 'flex', alignItems: 'left', flexDirection: 'column' }}>
                     <div style={{ display: 'flex' }}>
-                        <span style={{ width: '12px', height: '12px', background: 'rgb(241, 225, 91)', marginRight: '7px', marginTop: '7px' }}>                    </span>
+                        <span style={{ width: '12px', height: '12px', background: point.serieColor, marginRight: '7px', marginTop: '7px' }}>                    </span>
                         <span>Category: <strong>{point.serieId}</strong></span>
                     </div>
                     <div >
@@ -103,10 +91,9 @@ const LineChartMonthProgress = ({ data, onPointClick, setCurrentExpenseMonth }) 
                     onClick: handleLegendClick
                 }
             ]}
-            onClick={handleChartClick}
             tooltip={tooltip}
         />
     );
 }
 
-export default connect(() => ({}), dispatch => bindActionCreators(actionCreators, dispatch))(LineChartMonthProgress)
+export default LineChartMonthProgress
