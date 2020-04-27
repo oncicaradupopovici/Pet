@@ -19,6 +19,15 @@ namespace Pet.ExpenseTracking.Domain.Services
             return result;
         }
 
+        public int GetFisrtExpenseMonthOfCurrentYear()
+        {
+            var today = DateTime.Today;
+            var expensePeriodFirstDayOfMonth = _expenseSettingsRepository.GetExpensePeriodFirstDayOfMonth();
+            var currentYearFirstMonth = new DateTime(today.Year, 1, expensePeriodFirstDayOfMonth);
+            var expenseMonth = GetExpenseMonthByDate(currentYearFirstMonth);
+            return expenseMonth;
+        }
+
         public string GetExpenseMonthName(int expenseMonthId)
         {
             var year = expenseMonthId / 100;

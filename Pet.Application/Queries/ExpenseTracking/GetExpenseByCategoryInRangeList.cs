@@ -62,10 +62,12 @@ namespace Pet.Application.Queries.ExpenseTracking
             public async Task<List<Model>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var query = _query;
-                if (request.FromExpenseMonthId.HasValue)
-                {
-                    query = query.Where(q => request.FromExpenseMonthId <= q.ExpenseMonth);
-                }
+
+                var fromExpenseMonthId = request.FromExpenseMonthId.HasValue
+                    ? request.FromExpenseMonthId.Value
+                    : _expenseMonthService.GetFisrtExpenseMonthOfCurrentYear();
+
+                query = query.Where(q => q.ExpenseMonth >= fromExpenseMonthId);
 
                 if (request.ToExpenseMonthId.HasValue)
                 {
