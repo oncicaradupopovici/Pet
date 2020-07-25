@@ -48,7 +48,7 @@ namespace Pet.ExpenseTracking.Domain.Services
 
         public SavingsTransaction CreateSavingsTransactionWhen(RoundUpAdded notification)
         {
-            var savingsTransaction = _savingsTransactionFactory.CreateFrom(SavingsTransactionType.RoundUp, notification.Value, notification.PaymentDate, notification.Iban, null, notification.RoundUpId);
+            var savingsTransaction = _savingsTransactionFactory.CreateFrom(SavingsTransactionType.RoundUp, notification.Value, notification.PaymentDate, notification.Iban, string.Empty, notification.RoundUpId);
             return savingsTransaction;
         }
     }
