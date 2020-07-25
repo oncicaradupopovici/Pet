@@ -19,6 +19,7 @@
     <None Remove="SqlScripts\Tables\010.CashWithdrawal.sql" />
     <None Remove="SqlScripts\Tables\011.SavingsAccount.sql" />
     <None Remove="SqlScripts\Tables\012.SavingsTransaction.sql" />
+    <None Remove="SqlScripts\Tables\013.RoundUp.sql" />
     <None Remove="SqlScripts\Views\002.vwExpense.sql" />
     <None Remove="SqlScripts\Views\003.vwExpenseByCategory.sql" />
     <None Remove="SqlScripts\Views\004.vwExpenseMonth.sql" />
@@ -26,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="SqlScripts\Tables\013.RoundUp.sql" />
     <EmbeddedResource Include="SqlScripts\Tables\006.BankTransfer.sql" />
     <EmbeddedResource Include="SqlScripts\Tables\007.Iban.sql" />
     <EmbeddedResource Include="SqlScripts\Tables\008.DirectDebitPayment.sql" />

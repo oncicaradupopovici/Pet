@@ -75,6 +75,12 @@ namespace Pet.Connector.Ing
                     yield return command;
                     currentRowNo = currentRowNo + 4;
                 }
+                else if (IsRoundUpFirstRow(worksheet, currentRowNo))
+                {
+                    var command = GetRoundUp(worksheet, currentRowNo);
+                    yield return command;
+                    currentRowNo = currentRowNo + 3;
+                }
                 else
                 {
                     currentRowNo = currentRowNo + 1;
@@ -165,6 +171,14 @@ namespace Pet.Connector.Ing
             return transactionType == cashWithdrawalTransactionType;
         }
 
+        private bool IsRoundUpFirstRow(ExcelWorksheet worksheet, int rowNo)
+        {
+            const string roundUpTransactionType = "Tranzactie Round Up";
+            var transactionType = worksheet.Cells[rowNo, TRANSACTION_DETAILS_COLUMN].Value as string;
+
+            return transactionType == roundUpTransactionType;
+        }
+
         private AddPosPayment.Command GetPosPayment(ExcelWorksheet worksheet, int rowNo)
         {
             var paymentDate = worksheet.Cells[rowNo, DATE_COLUMN].GetValue<DateTime>();
@@ -213,6 +227,15 @@ namespace Pet.Connector.Ing
             var value = worksheet.Cells[rowNo, DEBIT_COLUMN].GetValue<decimal>();
 
             return new AddCashWithdrawal.Command(cashTerminal, value, withdrawalDate);
+        }
+
+        private AddRoundUp.Command GetRoundUp(ExcelWorksheet worksheet, int rowNo)
+        {
+            var paymentDate = worksheet.Cells[rowNo, DATE_COLUMN].GetValue<DateTime>();
+            var iban = worksheet.Cells[rowNo + 2, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("In contul: ", "");
+            var value = worksheet.Cells[rowNo, DEBIT_COLUMN].GetValue<decimal>();
+
+            return new AddRoundUp.Command(iban, value, paymentDate);
         }
     }
 }

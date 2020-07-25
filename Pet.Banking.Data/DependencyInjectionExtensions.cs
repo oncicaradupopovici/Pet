@@ -7,6 +7,7 @@ using Pet.Banking.Domain.BankTransferAggregate;
 using Pet.Banking.Domain.CashWithdrawalAggregate;
 using Pet.Banking.Domain.DirectDebitPaymentAggregate;
 using Pet.Banking.Domain.PosPaymentAggregate;
+using Pet.Banking.Domain.RoundUpAggregate;
 using Pet.Tenant.Abstractions;
 
 namespace Pet.Banking.Data
@@ -28,6 +29,9 @@ namespace Pet.Banking.Data
 
             services.AddScoped<IUow<CashWithdrawal>, EfUow<CashWithdrawal, BankingDbContext>>();
             services.AddScoped<ICashWithdrawalRepository, CashWithdrawalRepository>();
+
+            services.AddScoped<IUow<RoundUp>, EfUow<RoundUp, BankingDbContext>>();
+            services.AddScoped<IRoundUpRepository, RoundUpRepository>();
 
 
             services.AddEntityFrameworkSqlServer()

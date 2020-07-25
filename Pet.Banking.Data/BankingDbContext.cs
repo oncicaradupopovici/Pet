@@ -17,6 +17,7 @@ namespace Pet.Banking.Data
             modelBuilder.ApplyConfiguration(new DirectDebitPaymentConfiguration());
             modelBuilder.ApplyConfiguration(new BankTransferConfiguration());
             modelBuilder.ApplyConfiguration(new CashWithdrawalConfiguration());
+            modelBuilder.ApplyConfiguration(new RoundUpConfiguration());
         }
     }
 }
