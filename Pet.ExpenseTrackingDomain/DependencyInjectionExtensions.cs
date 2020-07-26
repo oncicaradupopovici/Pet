@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Pet.ExpenseTracking.Domain.ExpenseAggregate;
+using Pet.ExpenseTracking.Domain.IncomeAggregate;
 using Pet.ExpenseTracking.Domain.SavingsTransactionAggregate;
 using Pet.ExpenseTracking.Domain.Services;
 
@@ -14,9 +15,11 @@ namespace Pet.ExpenseTracking.Domain
             services.AddScoped<ExpenseSettingsService>();
             services.AddScoped<ExpenseMonthService>();
             services.AddScoped<SavingsService>();
+            services.AddScoped<IncomeService>();
 
             services.AddScoped<ExpenseFactory>();
             services.AddScoped<SavingsTransactionFactory>();
+            services.AddScoped<IncomeFactory>();
             
         }
     }

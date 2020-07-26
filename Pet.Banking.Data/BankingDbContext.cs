@@ -19,6 +19,7 @@ namespace Pet.Banking.Data
             modelBuilder.ApplyConfiguration(new CashWithdrawalConfiguration());
             modelBuilder.ApplyConfiguration(new RoundUpConfiguration());
             modelBuilder.ApplyConfiguration(new ExchangeConfiguration());
+            modelBuilder.ApplyConfiguration(new CollectionConfiguration());
         }
     }
 }

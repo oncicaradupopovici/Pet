@@ -5,6 +5,7 @@ using NBB.Data.EntityFramework;
 using Pet.Banking.Data.Repositories;
 using Pet.Banking.Domain.BankTransferAggregate;
 using Pet.Banking.Domain.CashWithdrawalAggregate;
+using Pet.Banking.Domain.CollectionAggregate;
 using Pet.Banking.Domain.DirectDebitPaymentAggregate;
 using Pet.Banking.Domain.ExchangeAggregate;
 using Pet.Banking.Domain.PosPaymentAggregate;
@@ -36,6 +37,9 @@ namespace Pet.Banking.Data
 
             services.AddScoped<IUow<Exchange>, EfUow<Exchange, BankingDbContext>>();
             services.AddScoped<IExchangeRepository, ExchangeRepository>();
+
+            services.AddScoped<IUow<Collection>, EfUow<Collection, BankingDbContext>>();
+            services.AddScoped<ICollectionRepository, CollectionRepository>();
 
 
             services.AddEntityFrameworkSqlServer()

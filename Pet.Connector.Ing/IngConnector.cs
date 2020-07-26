@@ -13,6 +13,7 @@ namespace Pet.Connector.Ing
         private int DATE_COLUMN = 2;
         private int TRANSACTION_DETAILS_COLUMN = 8;
         private int DEBIT_COLUMN = 16;
+        private int CREDIT_COLUMN = 17;
         private bool _headerIdentified = false;
 
         //const 
@@ -86,6 +87,12 @@ namespace Pet.Connector.Ing
                     var command = GetExchage(worksheet, currentRowNo);
                     yield return command;
                     currentRowNo = currentRowNo + 7;
+                }
+                else if (IsCollectionFirstRow(worksheet, currentRowNo))
+                {
+                    var command = GetCollection(worksheet, currentRowNo);
+                    yield return command;
+                    currentRowNo = currentRowNo + 5;
                 }
                 else
                 {
@@ -193,6 +200,14 @@ namespace Pet.Connector.Ing
             return transactionType == exchangeTransactionType;
         }
 
+        private bool IsCollectionFirstRow(ExcelWorksheet worksheet, int rowNo)
+        {
+            const string collectionTransactionType = "Incasare";
+            var transactionType = worksheet.Cells[rowNo, TRANSACTION_DETAILS_COLUMN].Value as string;
+
+            return transactionType == collectionTransactionType;
+        }
+
         private AddPosPayment.Command GetPosPayment(ExcelWorksheet worksheet, int rowNo)
         {
             var paymentDate = worksheet.Cells[rowNo, DATE_COLUMN].GetValue<DateTime>();
@@ -262,6 +277,23 @@ namespace Pet.Connector.Ing
             var value = worksheet.Cells[rowNo, DEBIT_COLUMN].GetValue<decimal>();
 
             return new AddExchange.Command(iban, exchangeValue, exchangeRate, details, value, paymentDate);
+        }
+
+        private AddCollection.Command GetCollection(ExcelWorksheet worksheet, int rowNo)
+        {
+            var incomeDate = worksheet.Cells[rowNo, DATE_COLUMN].GetValue<DateTime>();
+            var value = worksheet.Cells[rowNo, CREDIT_COLUMN].GetValue<decimal>();
+            var nextDetailsRow = worksheet.Cells[rowNo + 1, TRANSACTION_DETAILS_COLUMN].GetValue<string>();
+            if (nextDetailsRow.StartsWith("Referinta: "))
+            {
+                rowNo++; //skip one
+            }
+
+            var from = worksheet.Cells[rowNo + 1, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("Ordonator: ", "");
+            var fromIban = worksheet.Cells[rowNo + 2, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("Din contul: ", "");
+            var details = worksheet.Cells[rowNo + 3, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("Detalii: ", "");
+
+            return new AddCollection.Command(from, fromIban, details, value, incomeDate);
         }
     }
 }

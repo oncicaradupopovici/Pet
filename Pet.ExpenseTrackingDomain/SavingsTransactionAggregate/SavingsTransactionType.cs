@@ -4,6 +4,7 @@
     {
         BankTransfer = 1,
         RoundUp = 2,
-        Exchange = 3
+        Exchange = 3,
+        Collection = 4
     }
 }
