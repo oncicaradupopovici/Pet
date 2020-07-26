@@ -81,6 +81,12 @@ namespace Pet.Connector.Ing
                     yield return command;
                     currentRowNo = currentRowNo + 3;
                 }
+                else if (IsExchangeFirstRow(worksheet, currentRowNo))
+                {
+                    var command = GetExchage(worksheet, currentRowNo);
+                    yield return command;
+                    currentRowNo = currentRowNo + 7;
+                }
                 else
                 {
                     currentRowNo = currentRowNo + 1;
@@ -179,6 +185,14 @@ namespace Pet.Connector.Ing
             return transactionType == roundUpTransactionType;
         }
 
+        private bool IsExchangeFirstRow(ExcelWorksheet worksheet, int rowNo)
+        {
+            const string exchangeTransactionType = "Schimb valutar Home'Bank";
+            var transactionType = worksheet.Cells[rowNo, TRANSACTION_DETAILS_COLUMN].Value as string;
+
+            return transactionType == exchangeTransactionType;
+        }
+
         private AddPosPayment.Command GetPosPayment(ExcelWorksheet worksheet, int rowNo)
         {
             var paymentDate = worksheet.Cells[rowNo, DATE_COLUMN].GetValue<DateTime>();
@@ -236,6 +250,18 @@ namespace Pet.Connector.Ing
             var value = worksheet.Cells[rowNo, DEBIT_COLUMN].GetValue<decimal>();
 
             return new AddRoundUp.Command(iban, value, paymentDate);
+        }
+
+        private AddExchange.Command GetExchage(ExcelWorksheet worksheet, int rowNo)
+        {
+            var paymentDate = worksheet.Cells[rowNo, DATE_COLUMN].GetValue<DateTime>();
+            var iban = worksheet.Cells[rowNo + 2, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("In contul: ", "");
+            var exchangeValue = worksheet.Cells[rowNo + 3, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("Suma: ", "");
+            var exchangeRate = worksheet.Cells[rowNo + 4, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("Rata: ", "");
+            var details = worksheet.Cells[rowNo + 6, TRANSACTION_DETAILS_COLUMN].GetValue<string>();
+            var value = worksheet.Cells[rowNo, DEBIT_COLUMN].GetValue<decimal>();
+
+            return new AddExchange.Command(iban, exchangeValue, exchangeRate, details, value, paymentDate);
         }
     }
 }

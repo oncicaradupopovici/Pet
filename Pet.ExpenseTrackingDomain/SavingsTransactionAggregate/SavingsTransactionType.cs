@@ -3,6 +3,7 @@
     public enum SavingsTransactionType
     {
         BankTransfer = 1,
-        RoundUp = 2
+        RoundUp = 2,
+        Exchange = 3
     }
 }

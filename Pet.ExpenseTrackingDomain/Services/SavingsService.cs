@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Pet.Banking.Domain.BankTransferAggregate.DomainEvents;
+using Pet.Banking.Domain.ExchangeAggregate.DomainEvents;
 using Pet.Banking.Domain.RoundUpAggregate.DomainEvents;
 using Pet.ExpenseTracking.Domain.ExpenseAggregate;
 using Pet.ExpenseTracking.Domain.SavingsAccountAggregate;
@@ -49,6 +50,12 @@ namespace Pet.ExpenseTracking.Domain.Services
         public SavingsTransaction CreateSavingsTransactionWhen(RoundUpAdded notification)
         {
             var savingsTransaction = _savingsTransactionFactory.CreateFrom(SavingsTransactionType.RoundUp, notification.Value, notification.PaymentDate, notification.Iban, string.Empty, notification.RoundUpId);
+            return savingsTransaction;
+        }
+
+        public SavingsTransaction CreateSavingsTransactionWhen(ExchangeAdded notification)
+        {
+            var savingsTransaction = _savingsTransactionFactory.CreateFrom(SavingsTransactionType.Exchange, notification.Value, notification.PaymentDate, $"{notification.ExchangeValue} @ {notification.ExchangeRate}", notification.Details, notification.ExchangeId);
             return savingsTransaction;
         }
     }

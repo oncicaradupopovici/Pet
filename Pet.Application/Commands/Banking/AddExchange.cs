@@ -4,22 +4,29 @@ using System.Threading.Tasks;
 using MediatR;
 using NBB.Application.DataContracts;
 using NBB.Data.Abstractions;
+using Pet.Banking.Domain.ExchangeAggregate;
 using Pet.Banking.Domain.RoundUpAggregate;
 
 namespace Pet.Application.Commands.Banking
 {
-    public class AddRoundUp
+    public class AddExchange
     {
         public class Command :  NBB.Application.DataContracts.Command
         {
             public string Iban { get; }
+            public string ExchangeValue { get; }
+            public string ExchangeRate { get; }
+            public string Details { get; }
             public decimal Value { get; }
             public DateTime PaymentDate { get; }
 
-            public Command(string iban, decimal value, DateTime paymentDate, CommandMetadata metadata = null)
-                 : base(metadata)
+            public Command(string iban, string exchangeValue, string exchangeRate, string details, decimal value, DateTime paymentDate, CommandMetadata metadata = null)
+                : base(metadata)
             {
                 Iban = iban;
+                ExchangeValue = exchangeValue;
+                ExchangeRate = exchangeRate;
+                Details = details;
                 Value = value;
                 PaymentDate = paymentDate;
             }
@@ -27,17 +34,17 @@ namespace Pet.Application.Commands.Banking
 
         public class Handler : IRequestHandler<Command>
         {
-            private readonly IRoundUpRepository _repository;
+            private readonly IExchangeRepository _repository;
 
-            public Handler(IRoundUpRepository repository)
+            public Handler(IExchangeRepository repository)
             {
                 _repository = repository;
             }
 
             public async Task Handle(Command request, CancellationToken cancellationToken)
             {
-                var roundUp = new RoundUp(request.Iban, request.Value, request.PaymentDate);
-                await _repository.AddAsync(roundUp);
+                var exchange = new Exchange(request.Iban, request.ExchangeValue, request.ExchangeRate, request.Details, request.Value, request.PaymentDate);
+                await _repository.AddAsync(exchange);
                 await _repository.SaveChangesAsync();
             }
         }
