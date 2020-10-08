@@ -10,12 +10,14 @@ namespace Pet.Application.Commands.Banking
 {
     public class AddDirectDebitPayment
     {
-        public class Command :  NBB.Application.DataContracts.Command
+        public class Command :  NBB.Application.DataContracts.Command, IHaveTransactionDate
         {
             public string DirectDebitCode { get; }
             public decimal Value { get; }
             public string Details { get; }
             public DateTime PaymentDate { get; }
+
+            DateTime IHaveTransactionDate.TransactionDate => PaymentDate;
 
             public Command(string directDebitCode, decimal value, string details, DateTime paymentDate, CommandMetadata metadata = null) : base(metadata)
             {

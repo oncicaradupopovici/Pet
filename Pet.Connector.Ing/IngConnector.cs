@@ -135,28 +135,29 @@ namespace Pet.Connector.Ing
 
         static (bool, Command) MatchBankTransfer(ExcelWorksheet worksheet, int rowIndex)
         {
-            if (CheckStartsWith(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].Value, "Transfer Home'BankBeneficiar"))
+            const string IN_CONTUL = "In contul: ";
+            const string DETALII = "Detalii: ";
+            const string TRANSFER_HOME_BANK_BENEFICIAR = "Transfer Home'BankBeneficiar: ";
+            const string TRANSFER_HOME_BANK_REFERINTA = "Transfer Home'BankReferinta";
+            const string BENEFICIAR = "Beneficiar: ";
+            if (CheckStartsWith(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].Value, TRANSFER_HOME_BANK_BENEFICIAR) ||
+                CheckStartsWith(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].Value, TRANSFER_HOME_BANK_REFERINTA))
             {
+                string FindAndReplace(IEnumerable<string> source, string key) =>
+                    source
+                    .FirstOrDefault(x => x.StartsWith(key))
+                    ?.Replace(key, "");
+
                 var paymentDate = worksheet.Cells[rowIndex, DATE_COLUMN].GetValue<DateTime>();
                 var detailsColumn = SplitLines(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].GetValue<string>());
-                var recipientName = detailsColumn[0].Replace("Transfer Home'BankBeneficiar: ", "");
-                var iban = detailsColumn[1].Replace("In contul: ", "");
-                var details = detailsColumn[3].Replace("Detalii: ", "");
+                var recipientName = FindAndReplace(detailsColumn, TRANSFER_HOME_BANK_BENEFICIAR) ?? FindAndReplace(detailsColumn, BENEFICIAR);
+                var iban = FindAndReplace(detailsColumn, IN_CONTUL);
+                var details = FindAndReplace(detailsColumn, DETALII) ?? string.Empty;
                 var value = worksheet.Cells[rowIndex, DEBIT_COLUMN].GetValue<decimal>();
 
                 return (true, new AddBankTransfer.Command(iban, recipientName, details, value, paymentDate));
             }
-            else if (CheckStartsWith(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].Value, "Transfer Home'BankReferinta"))
-            {
-                var paymentDate = worksheet.Cells[rowIndex, DATE_COLUMN].GetValue<DateTime>();
-                var detailsColumn = SplitLines(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].GetValue<string>());
-                var recipientName = detailsColumn[1].Replace("Beneficiar: ", "");
-                var iban = detailsColumn[2].Replace("In contul: ", "");
-                var details = detailsColumn[3].Replace("Detalii: ", "");
-                var value = worksheet.Cells[rowIndex, DEBIT_COLUMN].GetValue<decimal>();
-
-                return (true, new AddBankTransfer.Command(iban, recipientName, details, value, paymentDate));
-            }
+           
 
             return (false, null);
         }

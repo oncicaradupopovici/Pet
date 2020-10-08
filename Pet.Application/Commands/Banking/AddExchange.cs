@@ -11,7 +11,7 @@ namespace Pet.Application.Commands.Banking
 {
     public class AddExchange
     {
-        public class Command :  NBB.Application.DataContracts.Command
+        public class Command :  NBB.Application.DataContracts.Command, IHaveTransactionDate
         {
             public string Iban { get; }
             public string ExchangeValue { get; }
@@ -19,6 +19,8 @@ namespace Pet.Application.Commands.Banking
             public string Details { get; }
             public decimal Value { get; }
             public DateTime PaymentDate { get; }
+
+            DateTime IHaveTransactionDate.TransactionDate => PaymentDate;
 
             public Command(string iban, string exchangeValue, string exchangeRate, string details, decimal value, DateTime paymentDate, CommandMetadata metadata = null)
                 : base(metadata)

@@ -10,11 +10,13 @@ namespace Pet.Application.Commands.Banking
 {
     public class AddCashWithdrawal
     {
-        public class Command : NBB.Application.DataContracts.Command
+        public class Command : NBB.Application.DataContracts.Command, IHaveTransactionDate
         {
             public string CashTerminal { get; }
             public decimal Value { get; }
             public DateTime WithdrawalDate { get; }
+
+            DateTime IHaveTransactionDate.TransactionDate => WithdrawalDate;
 
             public Command(string cashTerminal, decimal value, DateTime withdrawalDate, CommandMetadata metadata = null)
                 : base(metadata)

@@ -10,13 +10,15 @@ namespace Pet.Application.Commands.Banking
 {
     public class AddBankTransfer
     {
-        public class Command :  NBB.Application.DataContracts.Command
+        public class Command :  NBB.Application.DataContracts.Command, IHaveTransactionDate
         {
             public string Iban { get; }
             public string RecipientName { get; }
             public string Details { get; }
             public decimal Value { get; }
             public DateTime PaymentDate { get; }
+
+            DateTime IHaveTransactionDate.TransactionDate => PaymentDate;
 
             public Command(string iban, string recipientName, string details, decimal value, DateTime paymentDate, CommandMetadata metadata = null)
                  : base(metadata)

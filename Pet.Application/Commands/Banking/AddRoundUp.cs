@@ -10,11 +10,13 @@ namespace Pet.Application.Commands.Banking
 {
     public class AddRoundUp
     {
-        public class Command :  NBB.Application.DataContracts.Command
+        public class Command :  NBB.Application.DataContracts.Command, IHaveTransactionDate
         {
             public string Iban { get; }
             public decimal Value { get; }
             public DateTime PaymentDate { get; }
+
+            DateTime IHaveTransactionDate.TransactionDate => PaymentDate;
 
             public Command(string iban, decimal value, DateTime paymentDate, CommandMetadata metadata = null)
                  : base(metadata)
