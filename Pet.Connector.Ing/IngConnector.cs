@@ -82,7 +82,7 @@ namespace Pet.Connector.Ing
         {
             if (value != null)
             {
-                return value.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                return value.Split(new[] { "\r", "\n" }, StringSplitOptions.RemoveEmptyEntries);
             }
 
             return new string[] { };
