@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NBB.Application.DataContracts;
 using OfficeOpenXml;
 using Pet.Application.Commands.Banking;
@@ -10,11 +11,22 @@ namespace Pet.Connector.Ing
 {
     public class IngConnector : IConnector
     {
-        private int DATE_COLUMN = 2;
-        private int TRANSACTION_DETAILS_COLUMN = 8;
-        private int DEBIT_COLUMN = 16;
-        private int CREDIT_COLUMN = 17;
-        private bool _headerIdentified = false;
+        const int DATE_COLUMN = 1;
+        const int TRANSACTION_DETAILS_COLUMN = 2;
+        const int DEBIT_COLUMN = 3;
+        const int CREDIT_COLUMN = 4;
+
+        static List<Func<ExcelWorksheet, int, (bool, Command)>> Matchers = new List<Func<ExcelWorksheet, int, (bool, Command)>>()
+        {
+            MatchPosPayment,
+            MatchBankTransfer,
+            MatchDirectDebitPayment,
+            MatchCashWithdrawal,
+            MatchRoundUp,
+            MatchExchange,
+            MatchCollection
+        };
+        static Func<ExcelWorksheet, int, (bool, Command)> Match = Matchers.Aggregate(MPlus);
 
         //const 
         public IEnumerable<Command> GetCommandsFromBankReport(Stream stream)
@@ -25,275 +37,227 @@ namespace Pet.Connector.Ing
             var rowsCnt = worksheet.Dimension.Rows;
 
             var currentRowNo = 1;
-            while (currentRowNo < rowsCnt)
+            var headerIdentified = false;
+            while (currentRowNo < rowsCnt && !headerIdentified)
             {
-                if (IsHeaderRow(worksheet, currentRowNo))
+                if (MatchHeader(worksheet, currentRowNo))
                 {
-                    currentRowNo = currentRowNo + 1;
-                    _headerIdentified = true;
-                    break;
+                    headerIdentified = true;
                 }
-                else
-                {
-                    currentRowNo = currentRowNo + 1;
-                }
+
+                currentRowNo = currentRowNo + 1;
             }
 
-            if (!_headerIdentified)
+            if (!headerIdentified)
             {
                 throw new Exception("Could not identify report header");
             }
 
             while (currentRowNo < rowsCnt)
             {
-                if (IsPosPaymentFirstRow(worksheet, currentRowNo))
+                var (matched, cmd) = Match(worksheet, currentRowNo);
+                if (matched)
                 {
-                    var command = GetPosPayment(worksheet, currentRowNo);
-                    yield return command;
-                    currentRowNo = currentRowNo + 4;
+                    yield return cmd;
                 }
-                else if (IsBankTransferFirstRow(worksheet, currentRowNo))
-                {
-                    var command = GetBankTransfer(worksheet, currentRowNo);
-                    yield return command;
-                    currentRowNo = currentRowNo + 6;
-                }
-                else if(IsBankTransferBetweenMyAccountsFirstRow(worksheet, currentRowNo))
-                {
-                    var command = GetBankTransferBetweenMyAccounts(worksheet, currentRowNo);
-                    yield return command;
-                    currentRowNo = currentRowNo + 5;
-                }
-                else if (IsDirectDebitPaymentFirstRow(worksheet, currentRowNo))
-                {
-                    var command = GetDirectDebitPayment(worksheet, currentRowNo);
-                    yield return command;
-                    currentRowNo = currentRowNo + 7;
-                }
-                else if (IsCashWithdrawalFirstRow(worksheet, currentRowNo))
-                {
-                    var command = GetCashWithdrawal(worksheet, currentRowNo);
-                    yield return command;
-                    currentRowNo = currentRowNo + 4;
-                }
-                else if (IsRoundUpFirstRow(worksheet, currentRowNo))
-                {
-                    var command = GetRoundUp(worksheet, currentRowNo);
-                    yield return command;
-                    currentRowNo = currentRowNo + 3;
-                }
-                else if (IsExchangeFirstRow(worksheet, currentRowNo))
-                {
-                    var command = GetExchage(worksheet, currentRowNo);
-                    yield return command;
-                    currentRowNo = currentRowNo + 7;
-                }
-                else if (IsCollectionFirstRow(worksheet, currentRowNo))
-                {
-                    var command = GetCollection(worksheet, currentRowNo);
-                    yield return command;
-                    currentRowNo = currentRowNo + 5;
-                }
-                else
-                {
-                    currentRowNo = currentRowNo + 1;
-                }
+
+                currentRowNo++;
             }
 
         }
 
-        private bool IsHeaderRow(ExcelWorksheet worksheet, int rowNo)
+        static bool Check(object value, string expectedText)
         {
-            const string dateColumnHeaderText = "Data";
-            var dateColumnHeaderFound = false;
+            var actualText = value as string;
+            return actualText == expectedText;
+        }
 
-            const string transactionDetailsColumnHeaderText = "Detalii tranzactie";
-            var transactionDetailsColumnHeaderFound = false;
+        static bool CheckStartsWith(object value, string expectedText)
+        {
+            var actualText = value as string;
+            return actualText != null && actualText.StartsWith(expectedText);
+        }
 
-            const string debitColumnHeaderText = "Debit";
-            var debitColumnHeaderFound = false;
-
-            var columnsCnt = worksheet.Dimension.Columns;
-            var currentColNo = 1;
-            while(currentColNo < columnsCnt)
+        static string[] SplitLines(string value)
+        {
+            if (value != null)
             {
-                var text = worksheet.Cells[rowNo, currentColNo].Value as string;
-                if(!dateColumnHeaderFound && text == dateColumnHeaderText)
-                {
-                    DATE_COLUMN = currentColNo;
-                    dateColumnHeaderFound = true;
-                }
-                if (!transactionDetailsColumnHeaderFound && text == transactionDetailsColumnHeaderText)
-                {
-                    TRANSACTION_DETAILS_COLUMN = currentColNo;
-                    transactionDetailsColumnHeaderFound = true;
-                }
-                if (!debitColumnHeaderFound && text == debitColumnHeaderText)
-                {
-                    DEBIT_COLUMN = currentColNo;
-                    debitColumnHeaderFound = true;
-                }
-
-                currentColNo++;
+                return value.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             }
 
-            return dateColumnHeaderFound && transactionDetailsColumnHeaderFound && debitColumnHeaderFound;
+            return new string[] { };
         }
 
-        private bool IsPosPaymentFirstRow(ExcelWorksheet worksheet, int rowNo)
-        {
-            const string posPaymentTransactionType = "Cumparare POS";
-            var transactionType = worksheet.Cells[rowNo, TRANSACTION_DETAILS_COLUMN].Value as string;
-
-            return transactionType == posPaymentTransactionType;
-        }
-
-        private bool IsBankTransferFirstRow(ExcelWorksheet worksheet, int rowNo)
-        {
-            const string bankTransferTransactionType = "Transfer Home'Bank";
-            const string bankTransferNextRowText = "Beneficiar: ";
-            var transactionType = worksheet.Cells[rowNo, TRANSACTION_DETAILS_COLUMN].Value as string;
-            var nextRowText = worksheet.Cells[rowNo+1, TRANSACTION_DETAILS_COLUMN].Value as string;
-
-            return transactionType == bankTransferTransactionType && nextRowText.StartsWith(bankTransferNextRowText);
-        }
-
-        private bool IsBankTransferBetweenMyAccountsFirstRow(ExcelWorksheet worksheet, int rowNo)
-        {
-            const string bankTransferBetweenMyAccountsTransactionType = "Transfer Home'Bank";
-            const string bankTransferBetweenMyAccountsNextRowText = "Referinta: ";
-            var transactionType = worksheet.Cells[rowNo, TRANSACTION_DETAILS_COLUMN].Value as string;
-            var nextRowText = worksheet.Cells[rowNo + 1, TRANSACTION_DETAILS_COLUMN].Value as string;
-
-            return transactionType == bankTransferBetweenMyAccountsTransactionType && nextRowText.StartsWith(bankTransferBetweenMyAccountsNextRowText);
-        }
-
-        private bool IsDirectDebitPaymentFirstRow(ExcelWorksheet worksheet, int rowNo)
-        {
-            const string directDebitTransactionType = "Plata debit direct";
-            var transactionType = worksheet.Cells[rowNo, TRANSACTION_DETAILS_COLUMN].Value as string;
-
-            return transactionType == directDebitTransactionType;
-        }
-
-        private bool IsCashWithdrawalFirstRow(ExcelWorksheet worksheet, int rowNo)
-        {
-            const string cashWithdrawalTransactionType = "Retragere numerar";
-            var transactionType = worksheet.Cells[rowNo, TRANSACTION_DETAILS_COLUMN].Value as string;
-
-            return transactionType == cashWithdrawalTransactionType;
-        }
-
-        private bool IsRoundUpFirstRow(ExcelWorksheet worksheet, int rowNo)
-        {
-            const string roundUpTransactionType = "Tranzactie Round Up";
-            var transactionType = worksheet.Cells[rowNo, TRANSACTION_DETAILS_COLUMN].Value as string;
-
-            return transactionType == roundUpTransactionType;
-        }
-
-        private bool IsExchangeFirstRow(ExcelWorksheet worksheet, int rowNo)
-        {
-            const string exchangeTransactionType = "Schimb valutar Home'Bank";
-            var transactionType = worksheet.Cells[rowNo, TRANSACTION_DETAILS_COLUMN].Value as string;
-
-            return transactionType == exchangeTransactionType;
-        }
-
-        private bool IsCollectionFirstRow(ExcelWorksheet worksheet, int rowNo)
-        {
-            const string collectionTransactionType = "Incasare";
-            var transactionType = worksheet.Cells[rowNo, TRANSACTION_DETAILS_COLUMN].Value as string;
-
-            return transactionType == collectionTransactionType;
-        }
-
-        private AddPosPayment.Command GetPosPayment(ExcelWorksheet worksheet, int rowNo)
-        {
-            var paymentDate = worksheet.Cells[rowNo, DATE_COLUMN].GetValue<DateTime>();
-            var posTerminalCode = worksheet.Cells[rowNo + 2, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("Terminal: ", "");
-            var value = worksheet.Cells[rowNo, DEBIT_COLUMN].GetValue<decimal>();
-
-            return new AddPosPayment.Command(posTerminalCode, value, paymentDate);
-        }
-
-        private AddBankTransfer.Command GetBankTransfer(ExcelWorksheet worksheet, int rowNo)
-        {
-            var paymentDate = worksheet.Cells[rowNo, DATE_COLUMN].GetValue<DateTime>();
-            var recipientName = worksheet.Cells[rowNo + 1, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("Beneficiar: ", "");
-            var iban = worksheet.Cells[rowNo + 2, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("In contul: ", "");
-            var details = worksheet.Cells[rowNo + 4, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("Detalii: ", "");
-            var value = worksheet.Cells[rowNo, DEBIT_COLUMN].GetValue<decimal>();
-
-            return new AddBankTransfer.Command(iban, recipientName, details, value, paymentDate);
-        }
-
-        private AddBankTransfer.Command GetBankTransferBetweenMyAccounts(ExcelWorksheet worksheet, int rowNo)
-        {
-            var paymentDate = worksheet.Cells[rowNo, DATE_COLUMN].GetValue<DateTime>();
-            var recipientName = worksheet.Cells[rowNo + 2, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("Beneficiar: ", "");
-            var iban = worksheet.Cells[rowNo + 3, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("In contul: ", "");
-            var details = worksheet.Cells[rowNo + 4, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("Detalii: ", "");
-            var value = worksheet.Cells[rowNo, DEBIT_COLUMN].GetValue<decimal>();
-
-            return new AddBankTransfer.Command(iban, recipientName, details, value, paymentDate);
-        }
-
-        private AddDirectDebitPayment.Command GetDirectDebitPayment(ExcelWorksheet worksheet, int rowNo)
-        {
-            var paymentDate = worksheet.Cells[rowNo, DATE_COLUMN].GetValue<DateTime>();
-            var directDebitCode = worksheet.Cells[rowNo + 1, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("Beneficiar: ", "");
-            var details = worksheet.Cells[rowNo + 4, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("Detalii: ", "");
-            var value = worksheet.Cells[rowNo, DEBIT_COLUMN].GetValue<decimal>();
-
-            return new AddDirectDebitPayment.Command(directDebitCode, value, details, paymentDate);
-        }
-
-        private AddCashWithdrawal.Command GetCashWithdrawal(ExcelWorksheet worksheet, int rowNo)
-        {
-            var withdrawalDate = worksheet.Cells[rowNo, DATE_COLUMN].GetValue<DateTime>();
-            var cashTerminal = worksheet.Cells[rowNo + 2, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("Terminal: ", "");
-            var value = worksheet.Cells[rowNo, DEBIT_COLUMN].GetValue<decimal>();
-
-            return new AddCashWithdrawal.Command(cashTerminal, value, withdrawalDate);
-        }
-
-        private AddRoundUp.Command GetRoundUp(ExcelWorksheet worksheet, int rowNo)
-        {
-            var paymentDate = worksheet.Cells[rowNo, DATE_COLUMN].GetValue<DateTime>();
-            var iban = worksheet.Cells[rowNo + 2, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("In contul: ", "");
-            var value = worksheet.Cells[rowNo, DEBIT_COLUMN].GetValue<decimal>();
-
-            return new AddRoundUp.Command(iban, value, paymentDate);
-        }
-
-        private AddExchange.Command GetExchage(ExcelWorksheet worksheet, int rowNo)
-        {
-            var paymentDate = worksheet.Cells[rowNo, DATE_COLUMN].GetValue<DateTime>();
-            var iban = worksheet.Cells[rowNo + 2, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("In contul: ", "");
-            var exchangeValue = worksheet.Cells[rowNo + 3, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("Suma: ", "");
-            var exchangeRate = worksheet.Cells[rowNo + 4, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("Rata: ", "");
-            var details = worksheet.Cells[rowNo + 6, TRANSACTION_DETAILS_COLUMN].GetValue<string>();
-            var value = worksheet.Cells[rowNo, DEBIT_COLUMN].GetValue<decimal>();
-
-            return new AddExchange.Command(iban, exchangeValue, exchangeRate, details, value, paymentDate);
-        }
-
-        private AddCollection.Command GetCollection(ExcelWorksheet worksheet, int rowNo)
-        {
-            var incomeDate = worksheet.Cells[rowNo, DATE_COLUMN].GetValue<DateTime>();
-            var value = worksheet.Cells[rowNo, CREDIT_COLUMN].GetValue<decimal>();
-            var nextDetailsRow = worksheet.Cells[rowNo + 1, TRANSACTION_DETAILS_COLUMN].GetValue<string>();
-            if (nextDetailsRow.StartsWith("Referinta: "))
+        static Func<ExcelWorksheet, int, (bool, Command)> MPlus(Func<ExcelWorksheet, int, (bool, Command)> first, Func<ExcelWorksheet, int, (bool, Command)> second) =>
+            (ExcelWorksheet worksheet, int rowIndex) =>
             {
-                rowNo++; //skip one
+                var (matched, cmd) = first(worksheet, rowIndex);
+                if (!matched)
+                {
+                    (matched, cmd) = second(worksheet, rowIndex);
+                }
+                return (matched, cmd);
+            };
+
+        static bool MatchHeader(ExcelWorksheet worksheet, int rowIndex)
+        {
+            return
+                Check(worksheet.Cells[rowIndex, DATE_COLUMN].Value, "Data") &&
+                Check(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].Value, "Detalii tranzactie") &&
+                Check(worksheet.Cells[rowIndex, DEBIT_COLUMN].Value, "Debit") &&
+                Check(worksheet.Cells[rowIndex, CREDIT_COLUMN].Value, "Credit");
+        }
+
+        static (bool, Command) MatchPosPayment(ExcelWorksheet worksheet, int rowIndex)
+        {
+            if (CheckStartsWith(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].Value, "Cumparare POS"))
+            {
+                var paymentDate = worksheet.Cells[rowIndex, DATE_COLUMN].GetValue<DateTime>();
+                var details = SplitLines(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].GetValue<string>());
+                var posTerminalCode = details[1].Replace("Terminal: ", "");
+                var value = worksheet.Cells[rowIndex, DEBIT_COLUMN].GetValue<decimal>();
+
+                return (true, new AddPosPayment.Command(posTerminalCode, value, paymentDate));
             }
 
-            var from = worksheet.Cells[rowNo + 1, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("Ordonator: ", "");
-            var fromIban = worksheet.Cells[rowNo + 2, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("Din contul: ", "");
-            var details = worksheet.Cells[rowNo + 3, TRANSACTION_DETAILS_COLUMN].GetValue<string>().Replace("Detalii: ", "");
+            return (false, null);
+        }
 
-            return new AddCollection.Command(from, fromIban, details, value, incomeDate);
+        static (bool, Command) MatchBankTransfer(ExcelWorksheet worksheet, int rowIndex)
+        {
+            if (CheckStartsWith(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].Value, "Transfer Home'BankBeneficiar"))
+            {
+                var paymentDate = worksheet.Cells[rowIndex, DATE_COLUMN].GetValue<DateTime>();
+                var detailsColumn = SplitLines(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].GetValue<string>());
+                var recipientName = detailsColumn[0].Replace("Transfer Home'BankBeneficiar: ", "");
+                var iban = detailsColumn[1].Replace("In contul: ", "");
+                var details = detailsColumn[3].Replace("Detalii: ", "");
+                var value = worksheet.Cells[rowIndex, DEBIT_COLUMN].GetValue<decimal>();
+
+                return (true, new AddBankTransfer.Command(iban, recipientName, details, value, paymentDate));
+            }
+            else if (CheckStartsWith(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].Value, "Transfer Home'BankReferinta"))
+            {
+                var paymentDate = worksheet.Cells[rowIndex, DATE_COLUMN].GetValue<DateTime>();
+                var detailsColumn = SplitLines(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].GetValue<string>());
+                var recipientName = detailsColumn[1].Replace("Beneficiar: ", "");
+                var iban = detailsColumn[2].Replace("In contul: ", "");
+                var details = detailsColumn[3].Replace("Detalii: ", "");
+                var value = worksheet.Cells[rowIndex, DEBIT_COLUMN].GetValue<decimal>();
+
+                return (true, new AddBankTransfer.Command(iban, recipientName, details, value, paymentDate));
+            }
+
+            return (false, null);
+        }
+
+        static (bool, Command) MatchDirectDebitPayment(ExcelWorksheet worksheet, int rowIndex)
+        {
+            if (CheckStartsWith(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].Value, "Plata debit direct"))
+            {
+
+                var paymentDate = worksheet.Cells[rowIndex, DATE_COLUMN].GetValue<DateTime>();
+                var detailsColumn = SplitLines(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].GetValue<string>());
+                var directDebitCode = detailsColumn[0].Replace("Plata debit directBeneficiar: ", "");
+                var details = detailsColumn[3].Replace("Detalii: ", "");
+                var value = worksheet.Cells[rowIndex, DEBIT_COLUMN].GetValue<decimal>();
+
+                return (true, new AddDirectDebitPayment.Command(directDebitCode, value, details, paymentDate));
+            }
+
+            return (false, null);
+        }
+
+        static (bool, Command) MatchCashWithdrawal(ExcelWorksheet worksheet, int rowIndex)
+        {
+            if (CheckStartsWith(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].Value, "Retragere numerar"))
+            {
+                var withdrawalDate = worksheet.Cells[rowIndex, DATE_COLUMN].GetValue<DateTime>();
+                var detailsColumn = SplitLines(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].GetValue<string>());
+                var cashTerminal = detailsColumn[1].Replace("Terminal: ", "");
+                var value = worksheet.Cells[rowIndex, DEBIT_COLUMN].GetValue<decimal>();
+
+                return (true, new AddCashWithdrawal.Command(cashTerminal, value, withdrawalDate));
+            }
+
+            return (false, null);
+        }
+
+        static (bool, Command) MatchRoundUp(ExcelWorksheet worksheet, int rowIndex)
+        {
+            if (CheckStartsWith(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].Value, "Tranzactie Round Up"))
+            {
+                var paymentDate = worksheet.Cells[rowIndex, DATE_COLUMN].GetValue<DateTime>();
+                var detailsColumn = SplitLines(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].GetValue<string>());
+                var iban = detailsColumn[1].Replace("In contul: ", "");
+                var value = worksheet.Cells[rowIndex, DEBIT_COLUMN].GetValue<decimal>();
+
+                return (true, new AddRoundUp.Command(iban, value, paymentDate));
+            }
+
+            return (false, null);
+        }
+
+        static (bool, Command) MatchExchange(ExcelWorksheet worksheet, int rowIndex)
+        {
+            if (CheckStartsWith(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].Value, "Schimb valutar"))
+            {
+                var detailsColumn = SplitLines(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].GetValue<string>());
+
+                if (CheckStartsWith(detailsColumn[1], "In contul:"))
+                {
+                    var paymentDate = worksheet.Cells[rowIndex, DATE_COLUMN].GetValue<DateTime>();
+                    var iban = detailsColumn[1].Replace("In contul: ", "");
+                    var exchangeValue = detailsColumn[2].Replace("Suma: ", "");
+                    var exchangeRate = detailsColumn[3].Replace("Rata: ", "");
+                    var details = "OutGoing";
+                    var value = worksheet.Cells[rowIndex, DEBIT_COLUMN].GetValue<decimal>();
+                    return (true, new AddExchange.Command(iban, exchangeValue, exchangeRate, details, value, paymentDate));
+                }
+                else if (CheckStartsWith(detailsColumn[1], "Din contul:"))
+                {
+                    var paymentDate = worksheet.Cells[rowIndex, DATE_COLUMN].GetValue<DateTime>();
+                    var iban = detailsColumn[1].Replace("Din contul: ", "");
+                    var exchangeValue = detailsColumn[2].Replace("Suma: ", "");
+                    var exchangeRate = detailsColumn[3].Replace("Rata: ", "");
+                    var details = "InComming";
+                    var value = -worksheet.Cells[rowIndex, CREDIT_COLUMN].GetValue<decimal>();
+                    return (true, new AddExchange.Command(iban, exchangeValue, exchangeRate, details, value, paymentDate));
+                }
+            }
+
+            return (false, null);
+        }
+
+        static (bool, Command) MatchCollection(ExcelWorksheet worksheet, int rowIndex)
+        {
+            if (CheckStartsWith(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].Value, "IncasareOrdonator"))
+            {
+                var incomeDate = worksheet.Cells[rowIndex, DATE_COLUMN].GetValue<DateTime>();
+                var value = worksheet.Cells[rowIndex, CREDIT_COLUMN].GetValue<decimal>();
+                var detailsColumn = SplitLines(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].GetValue<string>());
+
+                var from = detailsColumn[0].Replace("IncasareOrdonator: ", "");
+                var fromIban = detailsColumn[1].Replace("Din contul: ", "");
+                var details = detailsColumn[2].Replace("Detalii: ", "");
+
+                return (true, new AddCollection.Command(from, fromIban, details, value, incomeDate));
+            }
+
+            if (CheckStartsWith(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].Value, "IncasareReferinta"))
+            {
+                var incomeDate = worksheet.Cells[rowIndex, DATE_COLUMN].GetValue<DateTime>();
+                var value = worksheet.Cells[rowIndex, CREDIT_COLUMN].GetValue<decimal>();
+                var detailsColumn = SplitLines(worksheet.Cells[rowIndex, TRANSACTION_DETAILS_COLUMN].GetValue<string>());
+
+                var from = detailsColumn[1].Replace("Ordonator: ", "");
+                var fromIban = detailsColumn[2].Replace("Din contul: ", "");
+                var details = detailsColumn[3].Replace("Detalii: ", "");
+
+                return (true, new AddCollection.Command(from, fromIban, details, value, incomeDate));
+            }
+
+            return (false, null);
         }
     }
 }
