@@ -20,9 +20,9 @@ namespace Pet.ExpenseTracking.Data.Repositories
         }
 
         public Task<Expense> FindById(Guid id) => _dbContext.Set<Expense>().FindAsync(id);
-        public Task<List<Expense>> FindByExpenseRecipientAndMonth(Guid expenseRecipientId, int expenseMonth)
+        public Task<List<Expense>> FindByExpenseRecipientAndMonthGreaterThen(Guid expenseRecipientId, int expenseMonth)
         {
-            return _dbContext.Set<Expense>().Where(x => x.ExpenseRecipientId == expenseRecipientId && x.ExpenseMonth == expenseMonth).ToListAsync();
+            return _dbContext.Set<Expense>().Where(x => x.ExpenseRecipientId == expenseRecipientId && x.ExpenseMonth >= expenseMonth).ToListAsync();
         }
 
         public Task AddAsync(Expense entity) => _dbContext.Set<Expense>().AddAsync(entity);

@@ -122,13 +122,11 @@ namespace Pet.ExpenseTracking.Domain.Services
                 return new List<Expense>();
             }
 
-            var expenses = await _expenseRepository.FindByExpenseRecipientAndMonth(notification.ExpenseRecipientId, notification.ExpenseMonth);
+            var expenses = await _expenseRepository.FindByExpenseRecipientAndMonthGreaterThen(notification.ExpenseRecipientId, notification.ExpenseMonth);
             foreach (var expense in expenses)
             {
-                if (expense.ExpenseCategoryId == notification.OldExpenseCategoryId)
-                {
-                    expense.SetExpenseCategory(notification.NewExpenseCategoryId);
-                }
+                //todo: create justThisOnce flag and exclude those expenses 
+                expense.SetExpenseCategory(notification.NewExpenseCategoryId);
             }
 
             return expenses;

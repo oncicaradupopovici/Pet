@@ -9,7 +9,7 @@ namespace Pet.ExpenseTracking.Domain.ExpenseAggregate
     {
         Task<Expense> FindById(Guid id);
 
-        Task<List<Expense>> FindByExpenseRecipientAndMonth(Guid expenseRecipientId, int expenseMonth);
+        Task<List<Expense>> FindByExpenseRecipientAndMonthGreaterThen(Guid expenseRecipientId, int expenseMonth);
         Task<List<Expense>> FindByPosTerminal(string posTerminal);
         Task<List<Expense>> FindByIban(string iban);
         Task<List<Expense>> FindByDirectDebitCode(string directDebitCode);
