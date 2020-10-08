@@ -29,10 +29,11 @@ namespace Pet.Connector.Ing
         static Func<ExcelWorksheet, int, (bool, Command)> Match = Matchers.Aggregate(MPlus);
 
         //const 
-        public IEnumerable<Command> GetCommandsFromBankReport(Stream stream)
+        public IEnumerable<Command> GetCommandsFromBankReport(Stream xlsStream)
         {
+            var xlsxStream = ConvertXls2Xlsx(xlsStream);
             var pck = new ExcelPackage();
-            pck.Load(stream);
+            pck.Load(xlsxStream);
             var worksheet = pck.Workbook.Worksheets[0];
             var rowsCnt = worksheet.Dimension.Rows;
 
@@ -64,6 +65,15 @@ namespace Pet.Connector.Ing
                 currentRowNo++;
             }
 
+        }
+
+        static Stream ConvertXls2Xlsx(Stream stream)
+        {
+            var wb = new Spire.Xls.Workbook();
+            wb.LoadFromStream(stream);
+            var outputStream = new MemoryStream();
+            wb.SaveToStream(outputStream, Spire.Xls.FileFormat.Version2016);
+            return outputStream;
         }
 
         static bool Check(object value, string expectedText)
