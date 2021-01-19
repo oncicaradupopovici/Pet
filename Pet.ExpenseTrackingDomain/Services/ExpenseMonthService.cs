@@ -28,6 +28,14 @@ namespace Pet.ExpenseTracking.Domain.Services
             return expenseMonth;
         }
 
+        public int GetExpenseMonthForNMonthsAgo(int months)
+        {
+            var today = DateTime.Today;
+            var date = today.AddMonths(-months);
+            var result = GetExpenseMonthByDate(date);
+            return result;
+        }
+
         public string GetExpenseMonthName(int expenseMonthId)
         {
             var year = expenseMonthId / 100;

@@ -65,7 +65,7 @@ namespace Pet.Application.Queries.ExpenseTracking
 
                 var fromExpenseMonthId = request.FromExpenseMonthId.HasValue
                     ? request.FromExpenseMonthId.Value
-                    : _expenseMonthService.GetFisrtExpenseMonthOfCurrentYear();
+                    : _expenseMonthService.GetExpenseMonthForNMonthsAgo(5);
 
                 query = query.Where(q => q.ExpenseMonth >= fromExpenseMonthId);
 
