@@ -263,7 +263,7 @@ namespace Pet.Connector.Ing
 
                 var from = detailsColumn[1].Replace("Ordonator: ", "");
                 var fromIban = detailsColumn[2].Replace("Din contul: ", "");
-                var details = detailsColumn[3].Replace("Detalii: ", "");
+                var details = detailsColumn.Length >= 4 ? detailsColumn[3].Replace("Detalii: ", string.Empty) : string.Empty;
 
                 return (true, new AddCollection.Command(from, fromIban, details, value, incomeDate));
             }
