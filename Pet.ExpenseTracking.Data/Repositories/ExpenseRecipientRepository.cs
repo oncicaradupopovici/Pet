@@ -20,7 +20,7 @@ namespace Pet.ExpenseTracking.Data.Repositories
 
         public IUow<ExpenseRecipient> Uow { get; }
 
-        public Task AddAsync(ExpenseRecipient entity) => _dbContext.Set<ExpenseRecipient>().AddAsync(entity);
+        public async Task AddAsync(ExpenseRecipient entity) => await _dbContext.Set<ExpenseRecipient>().AddAsync(entity);
 
         public async Task<ExpenseRecipient> FindByPosTerminal(string posTerminalCode)
         {
@@ -33,9 +33,9 @@ namespace Pet.ExpenseTracking.Data.Repositories
             return null;
         }
 
-        public Task<ExpenseRecipient> FindById(Guid expenseRecipientId)
+        public async Task<ExpenseRecipient> FindById(Guid expenseRecipientId)
         {
-            return _dbContext.Set<ExpenseRecipient>().FindAsync(expenseRecipientId);
+            return await _dbContext.Set<ExpenseRecipient>().FindAsync(expenseRecipientId);
         }
 
         public async Task<ExpenseRecipient> FindBestMatchForPosTerminalCode(string posTerminalCode)

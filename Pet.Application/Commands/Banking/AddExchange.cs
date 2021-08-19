@@ -43,11 +43,12 @@ namespace Pet.Application.Commands.Banking
                 _repository = repository;
             }
 
-            public async Task Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var exchange = new Exchange(request.Iban, request.ExchangeValue, request.ExchangeRate, request.Details, request.Value, request.PaymentDate);
                 await _repository.AddAsync(exchange);
-                await _repository.SaveChangesAsync();
+                await _repository.SaveChangesAsync(cancellationToken);
+                return Unit.Value;
             }
         }
     }

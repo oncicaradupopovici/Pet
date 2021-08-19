@@ -37,12 +37,13 @@ namespace Pet.Application.Commands.ExpenseTracking
                 _expenseFactory = expenseFactory;
             }
 
-            public async Task Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var expense = _expenseFactory.CreateFrom(ExpenseType.CashExpense, request.Value,
                     request.ExpenseDate, null, null, null, request.Details1, request.Details2, null);
                 await _expenseRepository.AddAsync(expense);
-                await _expenseRepository.SaveChangesAsync();
+                await _expenseRepository.SaveChangesAsync(cancellationToken);
+                return Unit.Value;
             }
         }
     }

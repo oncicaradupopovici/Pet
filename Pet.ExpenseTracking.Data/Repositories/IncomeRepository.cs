@@ -16,9 +16,9 @@ namespace Pet.ExpenseTracking.Data.Repositories
 
         public IUow<Income> Uow { get; }
 
-        public Task AddAsync(Income entity)
+        public async Task AddAsync(Income entity)
         {
-            return _dbContext.Set<Income>().AddAsync(entity);
+            await _dbContext.Set<Income>().AddAsync(entity);
         }
     }
 }

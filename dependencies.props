@@ -1,5 +1,8 @@
 <Project>
   <PropertyGroup Label="Package Versions">
-    <NBBPackagesVersion>4.0.2</NBBPackagesVersion>
+    <NBBPackagesVersion>5.2.2</NBBPackagesVersion>
+    <MediatRPackageVersion>9.0.0</MediatRPackageVersion>
+    <MicrosoftExtensionsPackagesVersion>5.0.0</MicrosoftExtensionsPackagesVersion>
+    <MicrosoftEntityFrameworkPackagesVersion>5.0.0</MicrosoftEntityFrameworkPackagesVersion>
   </PropertyGroup>
 </Project>

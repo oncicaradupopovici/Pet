@@ -1,17 +1,7 @@
 ﻿using System;
-using NBB.Domain;
+using MediatR;
 
 namespace Pet.ExpenseTracking.Domain.ExpenseRecipientAggregate.DomainEvents
 {
-    public class PosTerminalAdded : DomainEvent
-    {
-        public string PosTerminal { get; }
-        public Guid ExpenseRecipientId { get; }
-
-        public PosTerminalAdded(string posTerminal, Guid expenseRecipientId, DomainEventMetadata metadata = null) : base(metadata)
-        {
-            PosTerminal = posTerminal;
-            ExpenseRecipientId = expenseRecipientId;
-        }
-    }
+    public record PosTerminalAdded(string PosTerminal, Guid ExpenseRecipientId) : INotification;
 }

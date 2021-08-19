@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,8 +12,10 @@
 
   <ItemGroup>
     <PackageReference Include="NBB.Application.DataContracts" Version="$(NBBPackagesVersion)" />
-    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="4.1.0" />
+    <PackageReference Include="NBB.Application.MediatR" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="$(MediatRPackageVersion)" />
     <PackageReference Include="NBB.Core.DependencyInjection" Version="$(NBBPackagesVersion)" />
+    <PackageReference Include="System.Linq.Async" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

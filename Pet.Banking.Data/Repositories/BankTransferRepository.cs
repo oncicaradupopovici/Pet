@@ -16,11 +16,9 @@ namespace Pet.Banking.Data.Repositories
         }
 
         public IUow<BankTransfer> Uow { get; }
-        public Task AddAsync(BankTransfer entity) => _dbContext.Set<BankTransfer>().AddAsync(entity);
+        public async Task AddAsync(BankTransfer entity) => await _dbContext.Set<BankTransfer>().AddAsync(entity);
 
-        public Task<BankTransfer> FindById(Guid bankTransferId)
-        {
-            return _dbContext.Set<BankTransfer>().FindAsync(bankTransferId);
-        }
+        public async Task<BankTransfer> FindById(Guid bankTransferId)
+            => await _dbContext.Set<BankTransfer>().FindAsync(bankTransferId);
     }
 }

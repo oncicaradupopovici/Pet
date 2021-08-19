@@ -23,9 +23,9 @@ namespace Pet.Banking.Data.Repositories
         public IUow<PosPayment> Uow => _crudRepository.Uow;
         public Task AddAsync(PosPayment entity) => _crudRepository.AddAsync(entity);
 
-        public Task<PosPayment> FindById(Guid posPaymentId)
+        public async Task<PosPayment> FindById(Guid posPaymentId)
         {
-            return _dbContext.Set<PosPayment>().FindAsync(posPaymentId);
+            return await _dbContext.Set<PosPayment>().FindAsync(posPaymentId);
         }
 
         public Task<List<PosPayment>> FindByPosTerminalCode(string posTerminalCode)

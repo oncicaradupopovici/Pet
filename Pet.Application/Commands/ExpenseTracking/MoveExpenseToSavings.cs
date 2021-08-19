@@ -32,14 +32,15 @@ namespace Pet.Application.Commands.ExpenseTracking
                 _savingsAccountRepository = savingsAccountRepository;
             }
 
-            public async Task Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var expense = await _expenseRepository.FindById(request.ExpenseId);
                 if(expense.ExpenseType == ExpenseType.BankTransfer)
                 {
                     await _savingsAccountRepository.AddAsync(new SavingsAccount(expense.ExpenseRecipientDetailCode));
-                    await _savingsAccountRepository.SaveChangesAsync();
+                    await _savingsAccountRepository.SaveChangesAsync(cancellationToken);
                 }
+                return Unit.Value;
             }
         }
     }

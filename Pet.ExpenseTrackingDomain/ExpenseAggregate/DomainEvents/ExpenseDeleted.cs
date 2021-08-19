@@ -1,18 +1,7 @@
 ﻿using System;
-using NBB.Domain;
+using MediatR;
 
 namespace Pet.ExpenseTracking.Domain.ExpenseAggregate.DomainEvents
 {
-    public class ExpenseDeleted : DomainEvent
-    {
-        public Guid ExpenseId { get; }
-        public int ExpenseMonth { get; }
-
-        public ExpenseDeleted(Guid expenseId, int expenseMonth, DomainEventMetadata metadata = null)
-            : base(metadata)
-        {
-            ExpenseId = expenseId;
-            ExpenseMonth = expenseMonth;
-        }
-    }
+    public record ExpenseDeleted(Guid ExpenseId, int ExpenseMonth) : INotification;
 }

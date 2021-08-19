@@ -17,9 +17,9 @@ namespace Pet.ExpenseTracking.Data.Repositories
 
         public IUow<SavingsAccount> Uow { get; }
 
-        public Task AddAsync(SavingsAccount entity)
+        public async Task AddAsync(SavingsAccount entity)
         {
-            return _dbContext.Set<SavingsAccount>().AddAsync(entity);
+            await _dbContext.Set<SavingsAccount>().AddAsync(entity);
         }
 
         public Task<bool> IsSavingsAccount(string iban)

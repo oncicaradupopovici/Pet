@@ -1,6 +1,4 @@
 ﻿using MediatR;
-using NBB.Application.DataContracts;
-using NBB.Data.Abstractions.Linq;
 using Pet.ExpenseTracking.Domain.Services;
 using Pet.ReadModel.Projections;
 using System.Collections.Generic;
@@ -12,7 +10,7 @@ namespace Pet.Application.Queries.ExpenseTracking
 {
     public class GetExpenseByCategoryInRangeList
     {
-        public class Query : Query<List<Model>>
+        public class Query : IRequest<List<Model>>
         {
             public int? FromExpenseMonthId { get; set; }
             public int? ToExpenseMonthId { get; set; }
@@ -50,10 +48,10 @@ namespace Pet.Application.Queries.ExpenseTracking
 
         public class QueryHandler : IRequestHandler<Query, List<Model>>
         {
-            private readonly IQueryable<ExpenseByCategory> _query;
+            private readonly IAsyncEnumerable<ExpenseByCategory> _query;
             private readonly ExpenseMonthService _expenseMonthService;
 
-            public QueryHandler(IQueryable<ExpenseByCategory> query, ExpenseMonthService expenseMonthService)
+            public QueryHandler(IAsyncEnumerable<ExpenseByCategory> query, ExpenseMonthService expenseMonthService)
             {
                 _query = query;
                 _expenseMonthService = expenseMonthService;

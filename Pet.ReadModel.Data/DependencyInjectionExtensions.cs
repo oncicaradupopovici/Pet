@@ -11,10 +11,10 @@ namespace Pet.ReadModel.Data
         public static void AddReadModelDataAccess(this IServiceCollection services)
         {
             services.AddEntityFrameworkDataAccess();
-            services.AddEfQuery<Expense, ProjectionsDbContext>();
-            services.AddEfQuery<ExpenseByCategory, ProjectionsDbContext>();
-            services.AddEfQuery<ExpenseByRecipient, ProjectionsDbContext>();
-            services.AddEfQuery<ExpenseMonth, ProjectionsDbContext>();
+            services.AddEfAsyncEnumerable<Expense, ProjectionsDbContext>();
+            services.AddEfAsyncEnumerable<ExpenseByCategory, ProjectionsDbContext>();
+            services.AddEfAsyncEnumerable<ExpenseByRecipient, ProjectionsDbContext>();
+            services.AddEfAsyncEnumerable<ExpenseMonth, ProjectionsDbContext>();
 
             services.AddEntityFrameworkSqlServer()
                 .AddDbContext<ProjectionsDbContext>(

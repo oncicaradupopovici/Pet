@@ -4,16 +4,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using NBB.Application.DataContracts;
-using NBB.Data.Abstractions;
-using NBB.Data.Abstractions.Linq;
 using Pet.ReadModel.Projections;
 
 namespace Pet.Application.Queries.ExpenseTracking
 {
     public class GetExpenseByRecipientList
     {
-        public class Query : Query<List<Model>>
+        public class Query : IRequest<List<Model>>
         {
             public int ExpenseMonthId { get; set; }
         }
@@ -46,9 +43,9 @@ namespace Pet.Application.Queries.ExpenseTracking
 
         public class QueryHandler : IRequestHandler<Query, List<Model>>
         {
-            private readonly IQueryable<ExpenseByRecipient> _query;
+            private readonly IAsyncEnumerable<ExpenseByRecipient> _query;
 
-            public QueryHandler(IQueryable<ExpenseByRecipient> query)
+            public QueryHandler(IAsyncEnumerable<ExpenseByRecipient> query)
             {
                 _query = query;
             }

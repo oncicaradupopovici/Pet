@@ -48,7 +48,7 @@ namespace Pet.Application.Commands.ExpenseTracking
                 _expenseRecipientRepository = expenseRecipientRepository;
             }
 
-            public async Task Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 var expenseRecipient = request.Recipient.IsNew
                     ? new ExpenseRecipient(request.Recipient.Name)
@@ -83,6 +83,8 @@ namespace Pet.Application.Commands.ExpenseTracking
                     await _expenseRepository.UpdateAsync(expense);
                     await _expenseRepository.SaveChangesAsync();
                 }
+                
+                return Unit.Value;
             }
         }
     }

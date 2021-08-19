@@ -3,6 +3,7 @@ using NBB.Core.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MediatR;
 
 namespace Pet.Web.Models
 {
@@ -17,9 +18,9 @@ namespace Pet.Web.Models
             Events = events;
         }
 
-        public static SyncCommandResult From(Command command, IEnumerable<IEvent> events)
+        public static SyncCommandResult From(Command command, IEnumerable<INotification> events)
         {
-            return new SyncCommandResult(command.Metadata.CommandId, events.Select(EventDescriptor.From).ToList());
+            return new(command.Metadata.CommandId, events.Select(EventDescriptor.From).ToList());
         }
 
         
@@ -28,17 +29,17 @@ namespace Pet.Web.Models
     public class EventDescriptor
     {
         public string EventType { get; }
-        public IEvent Payload { get; }
+        public INotification Payload { get; }
 
-        public EventDescriptor(string eventType, IEvent payload)
+        public EventDescriptor(string eventType, INotification payload)
         {
             EventType = eventType;
             Payload = payload;
         }
 
-        public static EventDescriptor From(IEvent @event)
+        public static EventDescriptor From(INotification @event)
         {
-            return new EventDescriptor(@event.GetType().Name, @event);
+            return new(@event.GetType().Name, @event);
         }
     }
 }

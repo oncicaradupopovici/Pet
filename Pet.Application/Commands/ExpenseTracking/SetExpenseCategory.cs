@@ -53,14 +53,14 @@ namespace Pet.Application.Commands.ExpenseTracking
                 _expenseCategoryRepository = expenseCategoryRepository;
             }
 
-            public async Task Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
                 int expenseCategoryId;
                 if (request.Category.IsNew)
                 {
                     var expenseCategory = new ExpenseCategory(request.Category.Name);
                     await _expenseCategoryRepository.AddAsync(expenseCategory);
-                    await _expenseCategoryRepository.SaveChangesAsync();
+                    await _expenseCategoryRepository.SaveChangesAsync(cancellationToken);
                     expenseCategoryId = expenseCategory.ExpenseCategoryId;
                 }
                 else
@@ -73,13 +73,15 @@ namespace Pet.Application.Commands.ExpenseTracking
                 {
                     var expenseRecipient = await _expenseRecipientRepository.FindById(expense.ExpenseRecipientId.Value);
                     expenseRecipient.ChangeExpenseCategory(expenseCategoryId, expense.ExpenseMonth);
-                    await _expenseRecipientRepository.SaveChangesAsync();
+                    await _expenseRecipientRepository.SaveChangesAsync(cancellationToken);
                 }
                 else
                 {
                     expense.SetExpenseCategory(expenseCategoryId);
-                    await _expenseRepository.SaveChangesAsync();
+                    await _expenseRepository.SaveChangesAsync(cancellationToken);
                 }
+                
+                return Unit.Value;
             }
         }
     }

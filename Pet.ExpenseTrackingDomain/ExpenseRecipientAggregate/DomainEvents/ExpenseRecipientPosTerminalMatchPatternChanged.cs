@@ -1,17 +1,8 @@
 ﻿using System;
-using NBB.Domain;
+using MediatR;
 
 namespace Pet.ExpenseTracking.Domain.ExpenseRecipientAggregate.DomainEvents
 {
-    public class ExpenseRecipientPosTerminalMatchPatternChanged : DomainEvent
-    {
-        public Guid ExpenseRecipientId { get; }
-        public string PosTerminalMatchPattern { get; }
-
-        public ExpenseRecipientPosTerminalMatchPatternChanged(Guid expenseRecipientId, string posTerminalMatchPattern, DomainEventMetadata metadata = null) : base(metadata)
-        {
-            ExpenseRecipientId = expenseRecipientId;
-            PosTerminalMatchPattern = posTerminalMatchPattern;
-        }
-    }
+    public record ExpenseRecipientPosTerminalMatchPatternChanged(Guid ExpenseRecipientId,
+        string PosTerminalMatchPattern) : INotification;
 }

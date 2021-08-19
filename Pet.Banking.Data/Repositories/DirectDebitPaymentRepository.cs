@@ -23,9 +23,9 @@ namespace Pet.Banking.Data.Repositories
         public IUow<DirectDebitPayment> Uow => _crudRepository.Uow;
         public Task AddAsync(DirectDebitPayment entity) => _crudRepository.AddAsync(entity);
 
-        public Task<DirectDebitPayment> FindById(Guid posPaymentId)
+        public async Task<DirectDebitPayment> FindById(Guid posPaymentId)
         {
-            return _dbContext.Set<DirectDebitPayment>().FindAsync(posPaymentId);
+            return await _dbContext.Set<DirectDebitPayment>().FindAsync(posPaymentId);
         }
 
         public Task<List<DirectDebitPayment>> FindByDirectDebitCode(string directDebitCode)

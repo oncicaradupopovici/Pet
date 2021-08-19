@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using NBB.Application.DataContracts;
 using NBB.Core.Abstractions;
 using NBB.Core.DependencyInjection;
 using NBB.Domain.Abstractions;
@@ -9,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using MediatR.Registration;
+using NBB.Application.MediatR;
 using Pet.ExpenseTracking.Domain;
 
 namespace Pet.Application

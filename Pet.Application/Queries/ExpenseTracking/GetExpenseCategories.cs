@@ -3,14 +3,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using NBB.Application.DataContracts;
 using Pet.ExpenseTracking.Domain.ExpenseCategoryAggregate;
 
 namespace Pet.Application.Queries.ExpenseTracking
 {
     public class GetExpenseCategories
     {
-        public class Query : Query<List<Model>>
+        public class Query : IRequest<List<Model>>
         {
         }
 

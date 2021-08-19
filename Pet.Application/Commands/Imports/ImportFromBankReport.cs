@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -26,18 +27,18 @@ namespace Pet.Application.Commands.Imports
         {
             private readonly IConnector _connector;
             private readonly IMediator _mediator;
-            private readonly IQueryable<ReadModel.Projections.Expense> _expenseQuery;
+            private readonly IAsyncEnumerable<ReadModel.Projections.Expense> _expenseQuery;
 
-            public Handler(IConnector connector, IMediator mediator, IQueryable<ReadModel.Projections.Expense> expenseQuery)
+            public Handler(IConnector connector, IMediator mediator, IAsyncEnumerable<ReadModel.Projections.Expense> expenseQuery)
             {
                 _connector = connector;
                 _mediator = mediator;
                 _expenseQuery = expenseQuery;
             }
 
-            public async Task Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
             {
-                var lastTransactionDate = _expenseQuery.Max(x => x.ExpenseDate).Date;
+                var lastTransactionDate = (await _expenseQuery.MaxAsync(x => x.ExpenseDate, cancellationToken)).Date;
 
                 var commands =
                     _connector.GetCommandsFromBankReport(request.ReportStream)
@@ -55,6 +56,7 @@ namespace Pet.Application.Commands.Imports
                 {
                     await _mediator.Send(command, cancellationToken);
                 }
+                return Unit.Value;
             }
         }
     }

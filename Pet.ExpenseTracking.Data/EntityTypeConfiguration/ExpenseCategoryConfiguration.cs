@@ -8,7 +8,7 @@ namespace Pet.ExpenseTracking.Data.EntityTypeConfiguration
         public void Configure(Microsoft.EntityFrameworkCore.Metadata.Builders.EntityTypeBuilder<ExpenseCategory> builder)
         {
             builder.ToTable("ExpenseCategory").HasKey(x => x.ExpenseCategoryId);
-            builder.Property(x => x.ExpenseCategoryId).UseSqlServerIdentityColumn();
+            builder.Property(x => x.ExpenseCategoryId).UseIdentityColumn();
             builder.Ignore(x => x.Version);
 
         }

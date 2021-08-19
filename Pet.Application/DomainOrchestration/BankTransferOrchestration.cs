@@ -34,7 +34,7 @@ namespace Pet.Application.DomainOrchestration
             if (savingsTransaction != null)
             {
                 await _savingsTransactionRepository.AddAsync(savingsTransaction);
-                await _savingsTransactionRepository.SaveChangesAsync();
+                await _savingsTransactionRepository.SaveChangesAsync(cancellationToken);
             }
             else
             {
@@ -42,7 +42,7 @@ namespace Pet.Application.DomainOrchestration
                 if (expense != null)
                 {
                     await _expenseRepository.AddAsync(expense);
-                    await _expenseRepository.SaveChangesAsync();
+                    await _expenseRepository.SaveChangesAsync(cancellationToken);
                 }
             }
         }
@@ -52,7 +52,7 @@ namespace Pet.Application.DomainOrchestration
             var expenses = await _expenseService.UpdateExpensesWhen(notification);
             await Task.WhenAll(expenses.Select(_expenseRepository.UpdateAsync));
 
-            await _expenseRepository.SaveChangesAsync();
+            await _expenseRepository.SaveChangesAsync(cancellationToken);
         }
     }
 }

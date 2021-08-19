@@ -16,11 +16,10 @@ namespace Pet.Banking.Data.Repositories
         }
 
         public IUow<CashWithdrawal> Uow { get; }
-        public Task AddAsync(CashWithdrawal entity) => _dbContext.Set<CashWithdrawal>().AddAsync(entity);
+        public async Task AddAsync(CashWithdrawal entity) 
+            => await _dbContext.Set<CashWithdrawal>().AddAsync(entity);
 
-        public Task<CashWithdrawal> FindById(Guid cashWithdrawalId)
-        {
-            return _dbContext.Set<CashWithdrawal>().FindAsync(cashWithdrawalId);
-        }
+        public async Task<CashWithdrawal> FindById(Guid cashWithdrawalId)
+            => await _dbContext.Set<CashWithdrawal>().FindAsync(cashWithdrawalId);
     }
 }

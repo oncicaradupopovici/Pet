@@ -1,10 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using NBB.Application.DataContracts;
-using NBB.Data.Abstractions.Linq;
 using Pet.ExpenseTracking.Domain.Services;
 using Pet.ReadModel.Projections;
 
@@ -12,7 +11,7 @@ namespace Pet.Application.Queries.ExpenseTracking
 {
     public class GetCurrentExpenseMonth
     {
-        public class Query : Query<Model>
+        public class Query : IRequest<Model>
         {
         }
 
@@ -35,9 +34,9 @@ namespace Pet.Application.Queries.ExpenseTracking
         public class QueryHandler : IRequestHandler<Query, Model>
         {
             private readonly ExpenseSettingsService _expenseSettingsRepository;
-            private readonly IQueryable<ExpenseMonth> _expenseMonthQuery;
+            private readonly IAsyncEnumerable<ExpenseMonth> _expenseMonthQuery;
 
-            public QueryHandler(ExpenseSettingsService expenseSettingsRepository, IQueryable<ExpenseMonth> expenseMonthQuery)
+            public QueryHandler(ExpenseSettingsService expenseSettingsRepository, IAsyncEnumerable<ExpenseMonth> expenseMonthQuery)
             {
                 _expenseSettingsRepository = expenseSettingsRepository;
                 _expenseMonthQuery = expenseMonthQuery;

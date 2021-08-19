@@ -19,13 +19,13 @@ namespace Pet.ExpenseTracking.Data.Repositories
             _dbContext = dbContext;
         }
 
-        public Task<Expense> FindById(Guid id) => _dbContext.Set<Expense>().FindAsync(id);
+        public async Task<Expense> FindById(Guid id) => await _dbContext.Set<Expense>().FindAsync(id);
         public Task<List<Expense>> FindByExpenseRecipientAndMonthGreaterThen(Guid expenseRecipientId, int expenseMonth)
         {
             return _dbContext.Set<Expense>().Where(x => x.ExpenseRecipientId == expenseRecipientId && x.ExpenseMonth >= expenseMonth).ToListAsync();
         }
 
-        public Task AddAsync(Expense entity) => _dbContext.Set<Expense>().AddAsync(entity);
+        public async Task AddAsync(Expense entity) => await _dbContext.Set<Expense>().AddAsync(entity);
         public Task UpdateAsync(Expense entity)
         {
             if (entity.IsDeleted())

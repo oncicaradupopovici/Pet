@@ -16,9 +16,9 @@ namespace Pet.ExpenseTracking.Data.Repositories
 
         public IUow<SavingsTransaction> Uow { get; }
 
-        public Task AddAsync(SavingsTransaction entity)
+        public async Task AddAsync(SavingsTransaction entity)
         {
-            return _dbContext.Set<SavingsTransaction>().AddAsync(entity);
+            await _dbContext.Set<SavingsTransaction>().AddAsync(entity);
         }
     }
 }
