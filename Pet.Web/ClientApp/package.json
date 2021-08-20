@@ -17,7 +17,7 @@
     "react-redux": "^7.1.1",
     "react-router-bootstrap": "^0.25.0",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "^3.1.1",
+    "react-scripts": "^4.0.3",
     "react-select": "^3.0.4",
     "reactstrap": "^8.0.1",
     "redux": "^4.0.4",
@@ -27,12 +27,8 @@
   "devDependencies": {
     "ajv": "^6.10.2",
     "cross-env": "^5.2.1",
-    "eslint": "^6.3.0",
-    "eslint-config-react-app": "^5.0.1",
-    "eslint-plugin-flowtype": "^4.3.0",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.14.3"
+    "eslint-plugin-react": "^7.14.3",
+    "eslint-plugin-flowtype": "^4.3.0"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -42,18 +38,18 @@
     "build": "react-scripts build",
     "test": "cross-env CI=true react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "eslint ./src/"
+    "eslint:report": "eslint --fix --ext .js ."
   },
   "browserslist": {
     "production": [
-      ">0.5%",
+      ">0.2%",
       "not dead",
       "not op_mini all"
     ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
-      "last 1 edge version"
+      "last 1 safari version"
     ]
   }
 }

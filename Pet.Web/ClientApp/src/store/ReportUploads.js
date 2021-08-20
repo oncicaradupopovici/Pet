@@ -31,8 +31,3 @@ export const reducer = (state, action) => {
 
     return state;
 };
-
-
-function timeout(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}

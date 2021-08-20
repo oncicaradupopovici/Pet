@@ -8,6 +8,7 @@ import AnalyticsPage from './components/Analytics/AnalyticsPage';
 import Tenant from './components/Tenant';
 import ExpenseCategoryEvolutionChart from './components/Charts/ExpenseCategoryEvolutionChart';
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default () => (
   <Layout>
     <Route exact path='/' component={Home} />
