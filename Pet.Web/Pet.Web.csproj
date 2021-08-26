@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.9" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.4" />   
     <PackageReference Include="NBB.Correlation.AspNet" Version="$(NBBPackagesVersion)" />
     <PackageReference Include="Scrutor" Version="3.3.0" />

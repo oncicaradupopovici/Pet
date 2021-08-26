@@ -20,7 +20,7 @@ namespace Pet.Web.Models
 
         public static SyncCommandResult From(Command command, IEnumerable<INotification> events)
         {
-            return new(command.Metadata.CommandId, events.Select(EventDescriptor.From).ToList());
+            return new(Guid.NewGuid(), events.Select(EventDescriptor.From).ToList());
         }
 
         
