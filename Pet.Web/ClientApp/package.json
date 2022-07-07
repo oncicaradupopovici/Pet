@@ -9,7 +9,7 @@
     "bootstrap": "^4.3.1",
     "jquery": "3.4.1",
     "lodash.merge": "^4.6.2",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "normalizr": "^3.4.1",
     "re-reselect": "^3.4.0",
     "react": "^16.9.0",
